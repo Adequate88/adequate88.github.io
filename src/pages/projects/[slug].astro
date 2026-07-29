@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Colophon from '../../components/Colophon.astro';
+import '../../styles/prose.css';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+const { title, subtitle, description, tags, status, year, image, github } = project.data;
+
+---
+<BaseLayout title={`${title} — Alessandro Salo`} description={description}>
+
+  <article class="doc">
+
+    <div class="post-top-nav">
+      <a href="/projects" class="post-back-top">&#8592; Woops, wrong page?</a>
+    </div>
+
+    <div class="post-head">
+      <h1>{title}</h1>
+      {subtitle && <p style="font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;color:var(--text-subtle);margin-top:.65rem;text-transform:uppercase;">{subtitle}</p>}
+      <p class="lead">{description}</p>
+      <div class="post-tags">
+        {tags.map(tag => <span class="tag">{tag}</span>)}
+      </div>
+      {github && (
+        <div style="margin-top:1.1rem;">
+          <a href={github} target="_blank" rel="noopener" class="post-back"> Check out the source code on github:) &#8599;</a>
+        </div>
+      )}
+    </div>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <div class="post-foot">
+      <a href="/projects" class="post-back">&#8592; All done? Check out some other projects!</a>
+    </div>
+
+    <Colophon />
+  </article>
+
+</BaseLayout>

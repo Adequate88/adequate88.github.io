@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Colophon from '../components/Colophon.astro';
+---
+<BaseLayout title="About - Alessandro Salo">
+
+  <article class="doc">
+    <header class="head head--page">
+      <span class="kicker"><span class="smallcaps">Epic, Christopher Nolanesk About Me Page</span></span>
+      <h1>Alessandro Salo<span class="dot">.</span></h1>
+      <div class="meta-row">
+        <span>Based in Utrecht, NL</span><span>&middot;</span>
+        <span>He / Him</span>
+      </div>
+    </header>
+    <!-- Now Section -->
+<section class="sec">
+  <div class="sec-h">
+    <span class="smallcaps"><span class="status-dot"></span>What am I doing now?</span>
+    <span class="n">Updated on July 2026</span>
+  </div>
+  <div class="log-rows">
+    <div class="log-row">
+      <span class="log-index">01</span>
+      <span class="what">Reading "Physically Based Rendering: From Theory to Implementation"</span>
+    </div>
+    <div class="log-row">
+      <span class="log-index">02</span>
+      <span class="what">Looking for a thesis project</span>
+    </div>
+  </div>
+</section>
+
+    <!-- Bio & Focus Areas -->
+    <section class="sec">
+      <div class="about-grid">
+        <aside>
+          <div class="about-photo">
+            <img src="/assets/me.jpeg" alt="A portrait of Alessandro Salo." width="746" height="1066" decoding="async" />
+          </div>
+          <div class="about-photo-meta">
+            <span>Game and Media Technology MSc at Utrecht University, 2025–Present</span>
+            <span>Computational Science and Engineering at EPFL, 2024–2025</span>
+            <span>Double Degree in Physics and Liberal Arts &amp; Sciences (Majoring in Mathematics) at Utrecht University, 2020–2024</span>
+          </div>
+        </aside>
+
+        <div class="doc-prose">
+          <h2> My Philosophy </h2>
+          <p><em>I am committed to making games beautiful</em>. Not necessarily graphically - despite aspiring to be a graphics and engine programmer - but as experiences. So... why am I not a game designer? Well, I have too much fun at the bottom of the rabbit hole. And, the bottom of that rabbit hole, to me, is low-level languages and hardware-level optimizations. I like the nitty-gritty details.  </p>
+
+          <h2> My Background </h2>
+          <p> Currently, I'm a <em>Game and Media Technology Master's student</em> at Utrecht University. Previously, I finished a <em>double-degree Bachelor's in mathematics and physics</em> - where I did my final thesis on determining fluid-crystal phase boundaries of binary hard spheres using direct coexistence simulations (written in C).
+          The work I did was then continued and finalized by a PhD student and published. </p>
+          
+          <p> Continuing in this direction, I started a <em>Masters at EPFL in computational science and engineering</em>. A year in, I realized that my passion was really in games - stemming from teenage year attempts at making games and making an engine. And <em>now here I am, having a blast endlessly trying to keep up with this fast-paced evolving field.</em></p>
+
+          <h2>My Interests</h2>
+          <p><em>Real-time Rendering:</em> I like realistic or stylized graphics; ray-tracing and well optimized to render in real-time.</p>
+          <p><em>Game Engines:</em> A well crafted system of independent components that helps create cool games...? Sign me up!</p>
+          <p><em>Hardware:</em> Sometimes... I am a bit of a nerd - and fast code has to respect the hardware.</p>
+          <p><em>Simulations:</em> I like physics, I like math, I like computers - so this one is pretty obvious.</p>
+          <p><em>Optimization:</em> it's so satisfying seeing numbers go down (or up depending on what your measuring...). </p>
+
+          <h2>My Qualifications?</h2>
+          <p><a class="nav-btn" href="/assets/cv.pdf">CV <span class="arr">&#8595;</span></a> </p>
+        </div>
+      </div>
+    </section>
+
+    <Colophon />
+  </article>
+
+</BaseLayout>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://adequate88.github.io/sitemap-index.xml

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 158">
+  <rect width="280" height="158" fill="#d1c3a7"></rect>
+  <defs>
+    <pattern id="g" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0v28" fill="none" stroke="rgba(93,64,55,0.15)" stroke-width="1"></path>
+    </pattern>
+  </defs>
+  <rect width="280" height="158" fill="url(#g)"></rect>
+</svg>

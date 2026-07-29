@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Colophon from '../components/Colophon.astro';
+---
+<BaseLayout title="Home - Alessandro Salo">
+
+  <article class="doc" id="top">
+    <!-- Hero Header -->
+    <header class="head">
+      <span class="kicker"><span class="smallcaps">Portfolio</span></span>
+      <h1>Alessandro Salo<span class="dot">.</span></h1>
+      <p class="role">Aspiring graphics and game engine programmer</p>
+    </header>
+
+    <!-- Bio / Lede & Section Navigation Buttons -->
+    <div class="lede">
+      <p>I'm constantly catching up to everything <strong>rendering</strong> and <strong>game engine</strong> related. I also make algorithms go fast with <strong>low/hardware-level optimisation</strong> and <strong>GPU programming</strong>.</p>
+
+      <div class="hero-actions">
+        <a class="nav-btn" href="/projects">My Projects <span class="arr">&#8594;</span></a>
+        <a class="nav-btn" href="/blog">My Writing <span class="arr">&#8594;</span></a>
+        <a class="nav-btn" href="/about">About Me <span class="arr">&#8594;</span></a>
+        <a class="nav-btn nav-btn--secondary" href="/assets/cv.pdf">CV <span class="arr">&#8595;</span></a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <Colophon />
+  </article>
+
+</BaseLayout>

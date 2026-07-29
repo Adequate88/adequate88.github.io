@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en" data-theme="light"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><!-- No-flash theme boot: set data-theme before first paint, and re-apply
+       after every View Transition swap (which otherwise resets <html> to the
+       static data-theme="light"). astro:after-swap runs before paint, so the
+       saved theme is restored without a flash. --><script>
+    (function () {
+      function resolveTheme() {
+        try {
+          var t = localStorage.getItem('theme');
+          if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          return t;
+        } catch (e) {
+          return 'light';
+        }
+      }
+      function applyTheme() {
+        document.documentElement.setAttribute('data-theme', resolveTheme());
+      }
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
+    })();
+  </script><title>ALTO — Alessandro Salo</title><meta name="description" content="A one-sentence description of the project and what it does."><meta name="author" content="Alessandro Salo"><link rel="canonical" href="https://adequate88.github.io/projects/alto/"><!-- Icons --><link rel="icon" type="image/svg+xml" href="/assets/logo-monogram.svg"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><meta name="theme-color" content="#cabfa8"><!-- Open Graph --><meta property="og:type" content="website"><meta property="og:site_name" content="Alessandro Salo"><meta property="og:title" content="ALTO — Alessandro Salo"><meta property="og:description" content="A one-sentence description of the project and what it does."><meta property="og:url" content="https://adequate88.github.io/projects/alto/"><meta property="og:image" content="https://adequate88.github.io/assets/me.jpeg"><meta property="og:image:alt" content="Alessandro Salo — graphics programmer"><meta property="og:image:width" content="746"><meta property="og:image:height" content="1066"><meta property="og:locale" content="en_US"><!-- Twitter --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ALTO — Alessandro Salo"><meta name="twitter:description" content="A one-sentence description of the project and what it does."><meta name="twitter:image" content="https://adequate88.github.io/assets/me.jpeg"><meta name="twitter:image:alt" content="Alessandro Salo — graphics programmer"><!-- Feeds & discovery --><link rel="alternate" type="application/rss+xml" title="Alessandro Salo — Blog" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><link rel="stylesheet" href="/_astro/about.C73qM9YX.css">
+<style>.prose{max-width:100%;margin:0;padding:0}.prose>*+*{margin-top:1.25rem}.prose h2{font-family:var(--font-display);font-size:1.75rem;font-weight:800;letter-spacing:-.03em;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border-subtle)}.prose h3{font-family:var(--font-display);font-size:1.3rem;font-weight:800;letter-spacing:-.02em;margin-top:2rem}.prose p{font-family:var(--font-body);font-size:1.1rem;line-height:1.75;color:var(--text);text-wrap:pretty}.prose em{color:var(--accent);font-style:italic}.prose strong{font-weight:700}.prose a{color:var(--accent);border-bottom:1px solid var(--accent)}.prose a:hover{opacity:.8}.prose ul,.prose ol{padding-left:1.5rem}.prose li{font-family:var(--font-body);font-size:1.05rem;line-height:1.7;margin-top:.35rem;color:var(--text)}.prose blockquote{border-left:3px solid var(--accent);padding-left:1.5rem;margin:2rem 0}.prose blockquote p{color:var(--text-muted);font-style:italic}.prose pre{background:var(--accent-secondary);border:1px solid var(--border);padding:1.5rem;overflow-x:auto;margin:2rem 0}.prose pre code{background:transparent;border:none;padding:0;color:#c6b796;font-size:.875rem}.prose code{font-family:var(--font-mono);font-size:.875em;background:var(--surface);color:var(--accent);padding:.15em .4em;border-radius:2px;border:1px solid var(--border)}.prose img{width:100%;height:auto;border:1px solid var(--border);margin:2rem 0;display:block}.prose hr{border:none;border-top:1px solid var(--border-subtle);margin:3rem 0}.post-header{padding:3rem 0 2rem;border-bottom:1px solid var(--border-subtle);margin:0 auto;max-width:92ch}.post-header h1{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4rem);font-weight:900;letter-spacing:-.045em;line-height:.98;margin:1rem 0}.post-header .lead{font-family:var(--font-body);font-size:1.15rem;line-height:1.65;color:var(--text-muted);margin-top:1rem;max-width:52ch;text-wrap:pretty}.post-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1.5rem}.post-hero-image{width:100%;height:auto;max-height:480px;object-fit:cover;border:1px solid var(--border);margin:2rem 0;display:block}
+</style><script type="module" src="/_astro/hoisted.DYNx3BYf.js"></script><style>[data-astro-transition-scope="astro-jpk3pzsv-3"] { view-transition-name: astro-jpk3pzsv-3; }@layer astro { ::view-transition-old(astro-jpk3pzsv-3) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(astro-jpk3pzsv-3) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(astro-jpk3pzsv-3) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(astro-jpk3pzsv-3) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jpk3pzsv-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jpk3pzsv-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jpk3pzsv-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jpk3pzsv-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-jpk3pzsv-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-jpk3pzsv-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-jpk3pzsv-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-jpk3pzsv-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body> <button class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false" title="Switch to dark mode" data-astro-transition-persist="astro-nqfp2pd2-1"> <svg class="ic-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 13.2A8.5 8.5 0 1 1 10.8 2.5a7 7 0 0 0 10.7 10.7z"></path></svg> <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"></circle><line x1="12" y1="1.5" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22.5"></line><line x1="3.5" y1="3.5" x2="5.3" y2="5.3"></line><line x1="18.7" y1="18.7" x2="20.5" y2="20.5"></line><line x1="1.5" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22.5" y2="12"></line><line x1="3.5" y1="20.5" x2="5.3" y2="18.7"></line><line x1="18.7" y1="5.3" x2="20.5" y2="3.5"></line></svg> </button> <nav class="spine" data-astro-transition-persist="astro-i44xwym4-2"> <div class="spine-head"> <a class="spine-brand" href="/" id="brand-link">AS<b>.</b></a> </div> <div class="spine-links"> <a href="/">Home</a> <a class="active" href="/projects">Projects</a> <a href="/blog">Writing</a> <a href="/about">About</a> <a href="https://github.com/Adequate88" target="_blank" rel="noopener">GitHub&#8201;&#8599;</a> </div> </nav>  <div class="stage" data-astro-transition-scope="astro-jpk3pzsv-3">  <article class="doc"> <div class="post-top-nav"> <a href="/projects" class="post-back-top">&#8592; Projects</a> </div> <div class="post-head"> <div class="meta-row"> <span class="smallcaps">Project</span> <span>&middot;</span><span>2025</span> </div> <h1>ALTO</h1> <p style="font-family:var(--font-mono);font-size:.72rem;letter-spacing:.08em;color:var(--text-subtle);margin-top:.65rem;text-transform:uppercase;">Project subtitle · Technology stack</p> <p class="lead">A one-sentence description of the project and what it does.</p> <div class="post-tags"> <span class="status-badge in-progress">In progress</span> <span class="tag">tag-one</span><span class="tag">tag-two</span><span class="tag">tag-three</span> </div> <div style="margin-top:1.1rem;"> <a href="https://github.com" target="_blank" rel="noopener" class="post-back">View on GitHub &#8599;</a> </div> </div>  <div class="prose"> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+<h2 id="architecture">Architecture</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+<ul>
+<li><strong>Component one</strong> — lorem ipsum dolor sit amet</li>
+<li><strong>Component two</strong> — consectetur adipiscing elit</li>
+<li><strong>Component three</strong> — sed do eiusmod tempor</li>
+<li><strong>Component four</strong> — incididunt ut labore et dolore</li>
+</ul>
+<h2 id="key-technique">Key technique</h2>
+<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#6A737D">// Code snippet here</span></span>
+<span class="line"><span style="color:#F97583">struct</span><span style="color:#B392F0"> Example</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    float</span><span style="color:#E1E4E8"> value;</span></span>
+<span class="line"><span style="color:#F97583">    int</span><span style="color:#E1E4E8"> count </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span></code></pre>
+<h2 id="results">Results</h2>
+<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+<h2 id="whats-next">What’s next</h2>
+<p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt.</p> </div> <div class="post-foot"> <a href="/projects" class="post-back">&#8592; All projects</a> </div> <div class="colophon"> <div class="links"> <a href="https://github.com/Adequate88" target="_blank" rel="noopener">GitHub</a> <a href="https://linkedin.com/in/alessandro-salo-755928218" target="_blank" rel="noopener">LinkedIn</a> <a href="mailto:saloalessandro@gmail.com">Email</a> </div> <span class="sig">Utrecht, NL &middot; set in Plex &amp; Grotesk</span> </div> </article>  </div> <script src="/theme-toggle.js"></script> </body> </html>
