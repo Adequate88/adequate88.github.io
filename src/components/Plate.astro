@@ -18,8 +18,8 @@ const resolvedImage = image
   : undefined;
 ---
 <span class="plate">
-  {image ? (
-    <img src={image} alt={alt} loading="lazy" decoding="async" />
+  {resolvedImage ? (
+    <img src={resolvedImage} alt={alt} loading="lazy" decoding="async" />
   ) : (
     <span class="plate-ph">
       <svg class="plate-ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
