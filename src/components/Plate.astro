@@ -11,6 +11,11 @@ interface Props {
   alt?: string;
 }
 const { label = 'no image · pending', badge, image, alt = '' } = Astro.props;
+const resolvedImage = image
+  ? /^https?:\/\//.test(image)
+    ? image
+    : `${import.meta.env.BASE_URL}${image.replace(/^\//, '')}`
+  : undefined;
 ---
 <span class="plate">
   {image ? (
