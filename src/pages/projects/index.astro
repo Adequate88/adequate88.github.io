@@ -4,11 +4,10 @@ import Colophon from '../../components/Colophon.astro';
 import Plate from '../../components/Plate.astro';
 import { getCollection } from 'astro:content';
 
-const statusRank = { active: 0, completed: 1, archived: 2 } as const;
 const projects = (await getCollection('projects')).sort((a, b) => {
-  const r = statusRank[a.data.status] - statusRank[b.data.status];
-  if (r !== 0) return r;
-  return (b.data.year ?? '').localeCompare(a.data.year ?? '');
+  const y = (b.data.year ?? '').localeCompare(a.data.year ?? '');
+  if (y !== 0) return y;
+  return (b.data.month ?? '').localeCompare(a.data.month ?? '');
 });
 
 const statusClass = { active: 'in-progress', completed: 'completed', archived: 'archived' };

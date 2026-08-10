@@ -22,6 +22,7 @@ const projects = defineCollection({
     tags: z.array(z.string()).default([]),
     status: z.enum(['active', 'completed', 'archived']).default('completed'),
     year: z.string().optional(),
+    month: z.string().optional(),
     image: z.string().optional(),
     github: z.string().optional(),
   }),
