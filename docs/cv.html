@@ -17,6 +17,7 @@ body{font-family:'Latin Modern Roman','CMU Serif','Nimbus Roman','Liberation Ser
 .contact-row a{color:#222;text-decoration:none;} .contact-row .separator{color:#666;}
 .section{margin-bottom:11px;}
 .section-title{font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#000;border-bottom:1px solid #000;padding-bottom:3px;margin-bottom:7px;}
+.subsection-title{font-size:13.3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#000;margin:8px 0 4px;}
 .summary-text{font-size:13.3px;line-height:1.45;text-align:justify;color:#1a1a1a;} .summary-text a{color:#000;}
 .competencies-grid{display:block;text-align:left;}
 .competency-tag{font-size:13.3px;color:#1a1a1a;} .competency-tag:not(:last-child)::after{content:" \2022 ";color:#555;}
@@ -25,8 +26,10 @@ body{font-family:'Latin Modern Roman','CMU Serif','Nimbus Roman','Liberation Ser
 .job-role{font-size:13.3px;font-style:italic;color:#1a1a1a;margin-bottom:2px;}
 .job ul,.project ul,.edu-item ul{padding-left:17px;margin-top:3px;} .job li,.project li,.edu-item li{font-size:13.3px;line-height:1.4;margin-bottom:2.5px;text-align:justify;}
 .project{margin-bottom:7px;}
+.project-header{display:flex;justify-content:flex-start;align-items:baseline;gap:7px;flex-wrap:wrap;}
 .project-title{font-size:14px;font-weight:700;color:#000;}
-.project-desc{font-size:13.3px;color:#1a1a1a;margin-top:2px;line-height:1.4;text-align:justify;} .project-tech{font-size:13.3px;font-style:italic;color:#444;margin-top:2px;}
+.project-desc{font-size:13.3px;color:#1a1a1a;margin-top:2px;line-height:1.4;text-align:justify;} .project-tech{font-size:13.3px;font-style:italic;color:#444;margin-top:0;}
+.project-tech::before{content:"\2013 ";font-style:normal;}
 .edu-item{margin-bottom:6px;} .edu-header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
 .edu-title{font-weight:700;font-size:14px;color:#000;} .edu-org{font-weight:400;font-style:italic;color:#1a1a1a;} .edu-year{font-size:13.3px;color:#222;white-space:nowrap;}
 .edu-desc{font-size:13.3px;color:#333;margin-top:2px;line-height:1.4;text-align:justify;}
@@ -54,115 +57,125 @@ body{font-family:'Latin Modern Roman','CMU Serif','Nimbus Roman','Liberation Ser
     </div>
   </div>
 
+  <!-- ===================== PROJECTS (kept first: strongest, most relevant signal for graphics/engine roles) ===================== -->
   <div class="section">
     <div class="section-title">Projects</div>
 
     <div class="project">
-      <span class="project-title">GPU Wavefront Ray Tracer on Vulkan Compute</span>
+      <div class="project-header">
+        <span class="project-title">GPU Wavefront Ray-tracer with Vulkan</span>
+        <span class="project-tech"> C++, Vulkan, GLSL/SPIR-V, OpenCL, CMake</span>
+      </div>
       <ul>
-        <li>Built a Vulkan compute backend from scratch and a fully GPU-parallel LBVH (Karras 2012: Morton codes, radix sort, hierarchy construction, bottom-up AABB propagation) in GLSL compute shaders.</li>
-        <li>Aided in converting megakernal ray tracing into five-stage wavefront pipelin.e</li>
-        <li>Achieved <strong>352&times; rendering speed-up</strong> (5067ms to 14.4ms) and a <strong>~9&times;</strong> faster BVH construction, reaching real-time rendering.</li>
+        <li>Built a Vulkan backend from scratch supporting a custom made GPU ray-tracier and GPU Linear Bounding Volume Hierarchy (using Morton codes, radix sort, hierarchy construction) in GLSL compute shaders.</li>
+        <li>Bug fixed ray-tracing wavefront pipeline.</li>
+        <li>Achieved real-time ray-tracing due to a <strong>352&times; </strong> rendering speed-up (5067ms to 14.4ms) and a <strong>~9&times;</strong> faster BVH construction.</li>
       </ul>
-      <div class="project-tech">C++20, Vulkan, GLSL/SPIR-V, OpenCL, CMake</div>
     </div>
 
     <div class="project">
-      <span class="project-title">Acceleration Structure Comparisons of BVH, BVH-SAH &amp; Grid</span>
+      <div class="project-header">
+        <span class="project-title">Acceleration Structure Comparisons of BVH, BVH-SAH and Grid</span>
+        <span class="project-tech">C++</span>
+      </div>
       <ul>
-        <li>Implemented and benchmarked three CPU ray-tracing acceleration structures (median-split BVH, SAH-optimized BVH, uniform grid with 3D-DDA traversal) across dense, sparse, and uniformly-distributed scenes.</li>
-        <li>Instrumented per-ray traversal and intersection statistics to quantify the space- vs. object-partitioning tradeoff.</li>
+        <li>Implemented and benchmarked three CPU ray-tracing acceleration structures (median-split BVH, SAH BVH, uniform grid with 3DDDA traversal) across dense, sparse, and uniformly-distributed scenes.</li>
+        <li>Implemented and obtained metrics for per-ray traversal and intersection statistics to quantify the space- vs. object-partitioning tradeoff.</li>
       </ul>
-      <div class="project-tech">C++17</div>
     </div>
 
     <div class="project">
-      <span class="project-title">SIMD &amp; GPU Cloth Simulation Optimization</span>
+      <div class="project-header">
+        <span class="project-title">SIMD and GPU Cloth Simulation Optimization</span>
+        <span class="project-tech">C++, SSE/SIMD, OpenCL</span>
+      </div>
       <ul>
-        <li>Parallelized a Verlet-integration cloth simulation using SSE intrinsics (SoA data layout, lane-shuffled race-condition-free constraint solving) and OpenCL compute kernels.</li>
+        <li>Parallelized a Verlet-integration cloth simulation using SSE intrinsics and OpenCL compute kernels; requiring Structure of Arrays data layout and race-condition free solutions. </li>
         <li>Achieved <strong>5&times;</strong> (SIMD) and <strong>19.6&times;</strong> (GPU) speed-ups over the sequential baseline while preserving simulation fidelity.</li>
       </ul>
-      <div class="project-tech">C++, SSE/SIMD, OpenCL</div>
     </div>
 
     <div class="project">
-      <span class="project-title">Rendering Resonance (Rasterizer)</span>
+      <div class="project-header">
+        <span class="project-title">Rendering Resonance (Web Rasterizer)</span>
+        <span class="project-tech">JavaScript, WebGL, GLSL</span>
+      </div>
       <ul>
-        <li>Built a billboard-based particle system (fire, smoke, fireflies) and normal mapping (tangent/bitangent computation, TBN reconstruction) for a team rasterizer alongside bloom, fog, and toon shading.</li>
+        <li>Built a billboard-based particle system (fire, smoke, fireflies) and normal mapping for a rasterizer compatible with bloom, fog, and toon shading.</li>
       </ul>
-      <div class="project-tech">JavaScript, WebGL, GLSL</div>
     </div>
 
     <div class="project">
       <span class="project-title">Additional Projects</span>
       <ul>
-        <li><strong>ML &amp; Deep Learning:</strong> CNN classifiers, a from-scratch YOLO detector, and fine-tuned BERTweet for sentiment classification (PyTorch, HuggingFace Transformers).</li>
+        <li><strong>ML and Deep Learning:</strong> CNN classifiers, a from-scratch YOLO detector, and fine-tuned BERTweet for sentiment classification (PyTorch, HuggingFace Transformers).</li>
         <li><strong>Monte Carlo Simulation Framework:</strong> interactive C++ statistics framework with a custom AST-based math-expression parser.</li>
         <li><strong>3D Voxel Reconstruction:</strong> multi-camera calibration, background subtraction, and voxel carving pipeline (Python, OpenCV).</li>
       </ul>
     </div>
   </div>
 
+  <!-- ===================== EDUCATION (moved up per template's early-career guidance) ===================== -->
   <div class="section avoid-break">
     <div class="section-title">Education</div>
 
     <div class="edu-item">
       <div class="edu-header">
-        <span class="edu-title">MSc Game &amp; Media Technology - <span class="edu-org">Utrecht University</span></span>
-        <span class="edu-year">2025 – present</span>
+        <span class="edu-title">MSc Game and Media Technology - <span class="edu-org">Utrecht University</span></span>
+        <span class="edu-year">2025 - present</span>
       </div>
       <ul>
-        <li>Coursework in graphics, GPGPU, and optimization; current weighted average 8.43/10.</li>
-        <li>Advanced Graphics 9.1, Computer Animation 8.8, Computer Vision 8.1; Optimization &amp; Vectorization (10), and more.</li>
+        <li>Coursework in graphics, computer animation, GPGPU, and optimization; current weighted average 8.43/10.</li>
+        <li>Advanced Graphics 9.1, Computer Animation 8.8, Computer Vision 8.1; Optimization and Vectorization (10), and more.</li>
       </ul>
     </div>
 
     <div class="edu-item">
       <div class="edu-header">
-        <span class="edu-title">MSc Computational Science &amp; Engineering - <span class="edu-org">EPFL</span></span>
+        <span class="edu-title">MSc Computational Science and Engineering - <span class="edu-org">EPFL</span></span>
         <span class="edu-year">2024 – 2025</span>
       </div>
       <ul>
-        <li>Scientific computing in C++, machine learning, and simulation of physical systems.</li>
+        <li>Scientific computing using C++, machine learning, and simulation of physical systems.</li>
         <li>Transferred to Utrecht University.</li>
       </ul>
     </div>
 
     <div class="edu-item">
       <div class="edu-header">
-        <span class="edu-title">BSc Physics &amp; Astronomy - <span class="edu-org">Utrecht University</span></span>
+        <span class="edu-title">BSc Physics and Astronomy - <span class="edu-org">Utrecht University</span></span>
         <span class="edu-year">2020 – 2024</span>
       </div>
       <ul>
         <li>Cum laude - weighted average 8.64/10.</li>
-        <li>Notable courses: Structure of Matter 9.6, Advanced Statistical Physics 9.5, Numerical Analysis 9.0.</li>
       </ul>
     </div>
 
     <div class="edu-item">
       <div class="edu-header">
-        <span class="edu-title">BSc Liberal Arts &amp; Sciences (Honours), Major in Mathematics and Physics - <span class="edu-org">University College Utrecht</span></span>
+        <span class="edu-title">BSc Liberal Arts and Sciences (Honours), Major in Mathematics and Physics - <span class="edu-org">University College Utrecht</span></span>
         <span class="edu-year">2020 – 2024</span>
       </div>
       <ul>
-        <li>Magna cum laude - GPA 3.87/4.0 (197.5 ECTS).</li>
+        <li>Magna cum laude - GPA 3.87/4.0 (250 ECTS).</li>
       </ul>
     </div>
   </div>
 
+  <!-- ===================== RESEARCH & EXPERIENCE (template's "WORK EXPERIENCE" slot) ===================== -->
   <div class="section">
-    <div class="section-title">Research &amp; Experience</div>
+    <div class="section-title">Research and Experience</div>
 
     <div class="job">
       <div class="job-header">
         <span class="job-company">Utrecht University - Physics Research</span>
-        <span class="job-period">2023 – 2024</span>
+        <span class="job-period">2024</span>
       </div>
       <div class="job-role">Research Project (Physics BSc Thesis) that led to a Peer-Reviewed Publication</div>
       <ul>
-        <li>Ran <strong>direct-coexistence simulations</strong> to determine fluid–crystal phase boundaries of a binary hard-sphere mixture.</li>
-        <li>Co-authored the resulting peer-reviewed paper in the <strong>Journal of Chemical Physics</strong> (164(12), 2026; doi:10.1063/5.0321591).</li>
-        <li>Built and validated the simulation and analysis code in C; thesis graded 8.9/10.</li>
+        <li>Ran <strong>direct-coexistence simulations</strong> to determine fluid–crystal phase boundaries of a binary hard-sphere mixtures.</li>
+        <li>Built and validated the simulation and analysis code in C. </li>
+        <li>Thesis graded 8.9/10; co-authored the resulting peer-reviewed paper in the <strong>Journal of Chemical Physics</strong> (doi:10.1063/5.0321591).</li>
       </ul>
     </div>
 
@@ -179,22 +192,13 @@ body{font-family:'Latin Modern Roman','CMU Serif','Nimbus Roman','Liberation Ser
     </div>
   </div>
 
+  <!-- ===================== CERTIFICATIONS, SKILLS & INTERESTS (merged into one section per template) ===================== -->
   <div class="section avoid-break">
-    <div class="section-title">Skills</div>
-    <div class="skills-grid">
-      <div class="skill-item"><span class="skill-category">Languages:</span> C/C++, Python, C#, Bash, GLSL, OpenCL C, JavaScript</div>
-      <div class="skill-item"><span class="skill-category">Graphics &amp; Rendering:</span> ray tracing, acceleration structures, rasterization, physically-based &amp;normal mapping, particle systems</div>
-      <div class="skill-item"><span class="skill-category">HPC &amp; GPU:</span> Vulkan (compute + graphics), OpenCL, SPIR-V, GLSL compute shaders, parallel algorithms, SIMD (SSE / AVX), OpenGL, WebGL</div>
-      <div class="skill-item"><span class="skill-category">Scientific Computing:</span> numerical methods, Monte Carlo simulation, statistical mechanics, NumPy, CMake</div>
-      <div class="skill-item"><span class="skill-category">ML &amp; Computer Vision:</span> PyTorch, HuggingFace Transformers, CNNs, deep learning, OpenCV</div>
-      <div class="skill-item"><span class="skill-category">Tools:</span> Git, Linux, GPU profilers, GoogleTest, Doxygen, ImGui</div>
-    </div>
-  </div>
+    <div class="section-title">Certifications, Skills and Interests</div>
 
-  <div class="section avoid-break">
-    <div class="section-title">Certifications &amp; Publications</div>
+    <div class="subsection-title">Certifications and Publications</div>
     <div class="cert-item">
-      <span class="cert-title">AI &amp; Machine Learning: Advanced Neural Networks &amp; Deep Learning (Grade A)</span>
+      <span class="cert-title">AI and Machine Learning: Advanced Neural Networks and Deep Learning (Grade A)</span>
       <span class="cert-org">Oxford - Lady Margaret Hall</span>
       <span class="cert-year">2023</span>
     </div>
@@ -203,15 +207,239 @@ body{font-family:'Latin Modern Roman','CMU Serif','Nimbus Roman','Liberation Ser
       <span class="cert-org">J. Chem. Phys. 164(12)</span>
       <span class="cert-year">2026</span>
     </div>
-  </div>
 
-  <div class="section avoid-break">
-    <div class="section-title">Interests</div>
+    <div class="subsection-title">Skills</div>
     <div class="skills-grid">
-      <div class="skill-item"><span class="skill-category">Hobbies &amp; interests:</span> Bouldering, board games, hiking, photography, music, cooking, philosophy, literature, game development.</div>
+      <div class="skill-item"><span class="skill-category">Languages:</span> C/C++, Python, C#, Bash, GLSL, JavaScript</div>
+      <div class="skill-item"><span class="skill-category">Graphics and Rendering:</span> ray tracing, acceleration structures, rasterization, real-time physically-based rendering, OpenGL, WebGL</div>
+      <div class="skill-item"><span class="skill-category">HPC and GPU:</span> Vulkan (compute + graphics), OpenCL, SPIR-V, GLSL compute shaders, parallel algorithms, SIMD (SSE / AVX)</div>
+      <div class="skill-item"><span class="skill-category">Scientific Computing:</span> numerical methods, Monte Carlo simulation, statistical mechanics, NumPy</div>
+      <div class="skill-item"><span class="skill-category">ML and Computer Vision:</span> PyTorch, Transformers, CNNs, deep learning, OpenCV</div>
+      <div class="skill-item"><span class="skill-category">Tools:</span> CMake, Git, Linux, GPU profilers, GoogleTest, Doxygen, ImGui</div>
+    </div>
+
+    <div class="subsection-title">Interests and Hobbies</div>
+    <div class="skills-grid">
+      <div class="skill-item">Bouldering, board games, hiking, photography, music, cooking, philosophy, literature, game development.</div>
     </div>
   </div>
 
 </div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
