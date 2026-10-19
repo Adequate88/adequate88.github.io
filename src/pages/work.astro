@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Colophon from '../components/Colophon.astro';
+import { getEntries, monthName, monthYear } from '../lib/entries';
+
+const entries = await getEntries();
+
+// Feature the newest entry that has an image; posts without one stay in the archive only.
+const featured = entries.find(e => e.image);
+const featuredLabel = featured === entries[0] ? 'Latest' : 'Featured';
+
+// The archive lists everything except the featured entry.
+const archive = entries.filter(e => e !== featured);
+const years = [...new Set(archive.map(e => e.date.getFullYear()))];
+---
+<BaseLayout title="Work - Alessandro Salo" description="Projects and blog posts on rendering, GPUs and making things fast.">
+
+  <article class="doc">
+    <header class="head head--page">
+      <h1>Work.</h1>
+      <p class="head-sub">Projects and blog posts on rendering, GPUs and making things fast.</p>
+    </header>
+
+    {featured && (
+      <a class="feat" href={featured.href}>
+        <div class="feat-img">
+          <img src={featured.image} alt="" decoding="async" />
+          <div class="feat-ov">
+            <span class="feat-k">{featuredLabel} - {monthYear(featured.date)} - {featured.kind}</span>
+            <span class="feat-t">{featured.title}</span>
+            <span class="feat-hint" aria-hidden="true">Hover for details</span>
+            <div class="feat-body">
+              <span class="feat-d">{featured.summary}</span>
+              <span class="feat-meta"><span>{featured.stack}</span><span class="feat-read">Read&#8201;&#8594;</span></span>
+            </div>
+          </div>
+        </div>
+      </a>
+    )}
+
+    {archive.length > 0 && (
+      <section aria-labelledby="archive-h">
+        <h2 class="smallcaps arch-h" id="archive-h">Archive</h2>
+        <div class="arch-grid">
+          <div>
+            {years.map(year => (
+              <div class="yr">
+                <h3 class="smallcaps yr-h">{year}</h3>
+                <div>
+                  {archive.filter(e => e.date.getFullYear() === year).map(e => (
+                    <a class="row" href={e.href}
+                       data-img={e.image ?? ''} data-title={e.title} data-summary={e.summary}
+                       data-meta={`${e.kind} - ${monthYear(e.date)}`} data-stack={e.stack}>
+                      <span>
+                        <span class="row-t">{e.title}</span>
+                        <span class="row-s">{e.stack || e.summary}</span>
+                      </span>
+                      <span class="smallcaps row-k">{e.kind} - {monthName(e.date)}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Preview card in the right margin (wide screens only); shown while an entry is hovered. -->
+          <aside class="card" aria-hidden="true">
+            <div class="card-in">
+              <div class="card-img"></div>
+              <span class="smallcaps card-m"></span>
+              <span class="card-t"></span>
+              <span class="card-d"></span>
+              <span class="card-s"></span>
+            </div>
+          </aside>
+        </div>
+      </section>
+    )}
+
+    <Colophon />
+  </article>
+
+  <script>
+    function initCard() {
+      const card = document.querySelector<HTMLElement>('.card');
+      const rows = document.querySelectorAll<HTMLAnchorElement>('.row');
+      if (!card || !rows.length) return;
+
+      const img = card.querySelector('.card-img')!;
+      const set = (sel: string, text = '') => { card.querySelector(sel)!.textContent = text; };
+      let current: HTMLAnchorElement | null = null;
+      let hideTimer: number | undefined;
+
+      const show = (row: HTMLAnchorElement) => {
+        clearTimeout(hideTimer);
+        card.classList.add('on');
+        if (row === current) return;
+        current?.classList.remove('cur');
+        current = row;
+        row.classList.add('cur');
+        const { img: src, title, summary, meta, stack } = row.dataset;
+        if (src) {
+          const el = document.createElement('img');
+          el.src = src;
+          el.alt = '';
+          img.replaceChildren(el);
+        } else {
+          const ph = document.createElement('span');
+          ph.className = 'card-ph';
+          ph.textContent = 'Blog';
+          img.replaceChildren(ph);
+        }
+        set('.card-m', meta);
+        set('.card-t', title);
+        set('.card-d', summary);
+        set('.card-s', stack);
+      };
+
+      // Short delay so moving between rows (or across the gap between years) doesn't flicker.
+      const hide = () => {
+        clearTimeout(hideTimer);
+        hideTimer = window.setTimeout(() => {
+          card.classList.remove('on');
+          current?.classList.remove('cur');
+          current = null;
+        }, 150);
+      };
+
+      rows.forEach(row => {
+        row.addEventListener('mouseenter', () => show(row));
+        row.addEventListener('mouseleave', hide);
+        row.addEventListener('focus', () => show(row));
+        row.addEventListener('blur', hide);
+      });
+    }
+
+    document.addEventListener('astro:page-load', initCard);
+  </script>
+
+</BaseLayout>

@@ -9,7 +9,7 @@
       btn.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
     }
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'dark' ? '#120e0c' : '#f0ece1');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#111111' : '#fafaf9');
   }
 
   function init() {

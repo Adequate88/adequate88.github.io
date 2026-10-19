@@ -2,33 +2,24 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Colophon from '../components/Colophon.astro';
 ---
-<BaseLayout title="404 — page not found · Alessandro Salo" description="The page you were looking for could not be found.">
+<BaseLayout title="404 — page not found - Alessandro Salo" description="The page you were looking for could not be found.">
 
   <article class="doc">
+    <header class="head head--page">
+      <span class="kicker"><span class="smallcaps">Error 404</span></span>
+      <h1>Page not found.</h1>
+      <p class="head-sub">This page didn&rsquo;t render. It may have moved, been renamed, or never existed in the first place.</p>
+    </header>
 
-    <div class="notfound">
-      <div class="notfound-ghost" aria-hidden="true">404</div>
-      <div class="notfound-inner">
-        <header class="head head--page" style="border-bottom:0;padding-bottom:0;">
-          <span class="kicker"><span class="smallcaps">Error</span></span>
-          <h1>Page not found<span class="dot">.</span></h1>
-        </header>
-        <p class="notfound-lead">This page didn&rsquo;t render. It may have moved, been renamed, or never existed in the first place.</p>
+    <pre class="nf-trace"><span>&gt;</span> GET {Astro.url.pathname}
+<span>&gt;</span> 404 - resource not found
+<span>&gt;</span> fallback &rarr; /</pre>
 
-        <div class="notfound-trace">
-          <span class="c">&gt;</span> GET <span class="k">{Astro.url.pathname}</span><br/>
-          <span class="c">&gt;</span> 404 &middot; resource not found<br/>
-          <span class="c">&gt;</span> fallback <span class="k">&rarr; /</span>
-        </div>
-
-        <nav class="notfound-links" aria-label="Site">
-          <a href="/">Home <span>&rarr;</span></a>
-          <a href="/projects">Projects <span>&rarr;</span></a>
-          <a href="/blog">Writing <span>&rarr;</span></a>
-          <a href="/about">About <span>&rarr;</span></a>
-        </nav>
-      </div>
-    </div>
+    <nav class="hero-links nf-links" aria-label="Site">
+      <a class="ulink" href="/">Home</a><span class="sep" aria-hidden="true">/</span>
+      <a class="ulink" href="/work">Work</a><span class="sep" aria-hidden="true">/</span>
+      <a class="ulink" href="/about">About</a>
+    </nav>
 
     <Colophon />
   </article>
@@ -36,30 +27,18 @@ import Colophon from '../components/Colophon.astro';
 </BaseLayout>
 
 <style>
-  .notfound { position: relative; padding: 1.5rem 0 1rem; overflow: hidden; }
-  .notfound-ghost {
-    position: absolute; top: 0; right: -1rem;
-    font-family: var(--font-display); font-weight: 900;
-    font-size: clamp(8rem, 22vw, 16rem); letter-spacing: -.06em; line-height: 1;
-    color: rgba(93,64,55,0.07); user-select: none; pointer-events: none; z-index: 0; white-space: nowrap;
+  .nf-trace {
+    margin: 0 0 2rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    line-height: 1.85;
+    color: var(--text-muted);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
-  .notfound-inner { position: relative; z-index: 1; }
-  .notfound-lead {
-    font-family: var(--font-body); font-size: 1.14rem; line-height: 1.6;
-    color: var(--text-muted); max-width: 46ch; margin: 1.2rem 0 0; text-wrap: pretty;
-  }
-  .notfound-trace {
-    margin: 1.8rem 0; background: var(--surface);
-    border: 1px solid var(--border); border-left: 3px solid var(--accent);
-    padding: 1.1rem 1.3rem; font-family: var(--font-mono); font-size: .82rem;
-    line-height: 1.85; color: var(--text-muted); max-width: 44ch; overflow-wrap: anywhere;
-  }
-  .notfound-trace .k { color: var(--accent); }
-  .notfound-trace .c { color: var(--text-subtle); }
-  .notfound-links {
-    display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 1.5rem;
-    font-family: var(--font-mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
-  }
-  .notfound-links a { color: var(--text-subtle); display: inline-flex; align-items: center; gap: .4rem; }
-  .notfound-links a:hover { color: var(--accent); }
+  .nf-trace span { color: var(--text-subtle); }
+  .nf-links { justify-content: flex-start; margin-top: 0; }
 </style>

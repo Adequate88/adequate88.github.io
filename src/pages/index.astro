@@ -8,7 +8,7 @@ import Colophon from '../components/Colophon.astro';
     <!-- Hero Header -->
     <header class="head">
       <span class="kicker"><span class="smallcaps">Portfolio</span></span>
-      <h1>Alessandro Salo<span class="dot">.</span></h1>
+      <h1>Alessandro Salo.</h1>
       <p class="role">Aspiring graphics and game engine programmer</p>
     </header>
 
@@ -16,12 +16,11 @@ import Colophon from '../components/Colophon.astro';
     <div class="lede">
       <p>I'm constantly catching up to everything <strong>rendering</strong> and <strong>game engine</strong> related. I also make algorithms go fast with <strong>low/hardware-level optimisation</strong> and <strong>GPU programming</strong>.</p>
 
-      <div class="hero-actions">
-        <a class="nav-btn" href="/projects">My Projects <span class="arr">&#8594;</span></a>
-        <a class="nav-btn" href="/blog">My Writing <span class="arr">&#8594;</span></a>
-        <a class="nav-btn" href="/about">About Me <span class="arr">&#8594;</span></a>
-        <a class="nav-btn nav-btn--secondary" href="/assets/cv.pdf">CV <span class="arr">&#8595;</span></a>
-      </div>
+      <nav class="hero-links" aria-label="Sections">
+        <a class="ulink" href="/work">Work</a><span class="sep" aria-hidden="true">/</span>
+        <a class="ulink" href="/about">About</a><span class="sep" aria-hidden="true">/</span>
+        <a class="ulink" href="/assets/cv.pdf">CV&#8201;&#8595;</a>
+      </nav>
     </div>
 
     <!-- Footer -->

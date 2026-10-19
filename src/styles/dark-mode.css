@@ -1,52 +1,41 @@
 :root[data-theme="dark"] {
-  /* Backgrounds & surfaces */
-  --bg:             #17100f;   /* Muted wine-black field */
-  --paper:          #1a1211;   /* Document sheet */
-  --surface:        #221716;   /* Cards / code blocks */
-  --surface-raised: #2e201f;   /* Hover surface */
-  /* Structural tones */
-  --border:         #40302f;   /* Dusty wine border */
-  --border-subtle:  rgba(201, 138, 156, 0.10);
-  --divider:        #b99195;   /* Muted rose labels */
+  /* Surfaces */
+  --bg:             #111111;
+  --surface:        #1a1a1a;
+  /* Lines */
+  --border:         #2a2a2a;
+  --border-subtle:  rgba(255, 255, 255, 0.08);
   /* Accent — dusty rose, desaturated for readability on dark */
-  --accent:           #c98a9c;
-  --accent-dim:       rgba(201, 138, 156, 0.12);
-  --accent-glow:      rgba(201, 138, 156, 0.06);
-  --accent-secondary: #2c1a1c;
-  /* Foreground — warm, dimmed off-white (not stark white) */
-  --text:           #f2e8e6;
-  --text-muted:     #cbb3b0;
-  --text-subtle:    #a68e8c;
-  /* Status */
-  --status-progress: #c98a9c;  /* Dusty rose */
-  --status-complete: #cbb3b0;  /* Stone */
-  --status-archived: #a68e8c;
-  /* Code blocks */
-  --code-bg:    #221716;
-  --code-color: #c98a9c;
-  --astro-code-color-background: #221716;
-  --astro-code-color-text:       #f2e8e6;
-  --astro-code-token-keyword:    #c98a9c;
-  --astro-code-token-string:     #cbb3b0;
-  --astro-code-token-comment:    #a68e8c;
-  /* Shadows */
-  --shadow-sheet:  0 8px 32px -4px rgba(0, 0, 0, 0.65);
+  --accent:         #c98a9c;
+  /* Text */
+  --text:           #ededed;
+  --text-muted:     #a3a3a3;
+  --text-subtle:    #737373;
+  /* Code */
+  --astro-code-color-text:        #ededed;
+  --astro-code-color-background:  #1a1a1a;
+  --astro-code-token-constant:    #d4d4d4;
+  --astro-code-token-string:      #a3a3a3;
+  --astro-code-token-comment:     #737373;
+  --astro-code-token-keyword:     #c98a9c;
+  --astro-code-token-parameter:   #d4d4d4;
+  --astro-code-token-function:    #ededed;
+  --astro-code-token-punctuation: #737373;
+  --astro-code-token-link:        #c98a9c;
 }
-:root[data-theme="dark"] .doc {
-  box-shadow: var(--shadow-sheet);
-}
+
 /* Smooth transitions for theme toggle */
 :root[data-theme] body,
-:root[data-theme] .doc,
 :root[data-theme] .spine-links a {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 @media (prefers-reduced-motion: reduce) {
   :root[data-theme] body,
-  :root[data-theme] .doc,
   :root[data-theme] .spine-links a { transition: none; }
 }
-/* Theme toggle button styling */
+
+/* Theme toggle button — a labelled pill so it reads as a control at a glance.
+   It shows the theme you'd switch TO: "Dark" (moon) in light mode, "Light" (sun) in dark mode. */
 .theme-toggle {
   position: fixed;
   top: clamp(1rem, 3vw, 2rem);
@@ -54,33 +43,34 @@
   z-index: 100;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  border: 1px solid var(--border-subtle);
-  background: var(--paper);
-  color: var(--text-subtle);
+  gap: .45rem;
+  height: 32px;
+  padding: 0 .8rem 0 .7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: .64rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all .2s ease;
-  border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: color .15s ease, border-color .15s ease;
 }
-.theme-toggle:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-  transform: scale(1.05);
-}
-.theme-toggle svg { width: 18px; height: 18px; display: block; }
-.theme-toggle .ic-sun  { display: none; }
-.theme-toggle .ic-moon { display: block; }
-:root[data-theme="dark"] .theme-toggle .ic-sun  { display: block; }
-:root[data-theme="dark"] .theme-toggle .ic-moon { display: none; }
+.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.theme-toggle svg { width: 14px; height: 14px; display: block; flex-shrink: 0; }
+.theme-toggle .ic-sun,  .theme-toggle .tt-light { display: none; }
+.theme-toggle .ic-moon, .theme-toggle .tt-dark  { display: block; }
+:root[data-theme="dark"] .theme-toggle .ic-sun,
+:root[data-theme="dark"] .theme-toggle .tt-light { display: block; }
+:root[data-theme="dark"] .theme-toggle .ic-moon,
+:root[data-theme="dark"] .theme-toggle .tt-dark  { display: none; }
+
 @media (max-width: 1199px) {
-  .theme-toggle {
-    top: 1.25rem;
-    right: 1.25rem;
-    width: 34px;
-    height: 34px;
-  }
+  .theme-toggle { top: 1.2rem; right: 1.25rem; }
+}
+/* Narrow phones: icon-only circle so it doesn't collide with the top nav */
+@media (max-width: 480px) {
+  .theme-toggle { width: 32px; padding: 0; justify-content: center; }
+  .theme-toggle .tt-label { display: none !important; }
 }

@@ -1,9 +1,6 @@
 /* ============================================================
    focus-visible.css — keyboard focus indicators.
-   The site's interactions are hover-driven (and the OS cursor is
-   hidden), so keyboard users had no visible focus state. Append this
-   to the end of shared.css, OR add `@import './focus-visible.css';`
-   at the top of shared.css.
+   Rings show for keyboard navigation only, never on mouse click.
    ============================================================ */
 
 :focus-visible {
@@ -12,14 +9,4 @@
   border-radius: var(--radius);
 }
 
-a:focus-visible,
-button:focus-visible,
-.btn:focus-visible,
-[data-hover]:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-
-/* Don't show the ring on mouse click, only keyboard (default :focus-visible
-   behaviour) — and never leave a lingering default outline. */
 :focus:not(:focus-visible) { outline: none; }

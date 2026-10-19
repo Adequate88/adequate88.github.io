@@ -1,135 +1,73 @@
 /* ============================================================
    Tokens — Alessandro Salo Portfolio Design System
-   Forest & Sage Green Palette
+   Minimal: monochrome with a single wine accent
+   (dark-mode values live in dark-mode.css)
    ============================================================ */
 
-/* ── Webfonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
-/* Alessandro Salo — Portfolio Design System — Wine */
-
 :root {
-  /* ───────────────────────────────────────────────
-     COLORS — Wine
-     ─────────────────────────────────────────────── */
+  /* Surfaces */
+  --bg:             #fafaf9;
+  --surface:        #f2f2f0;   /* Code blocks & placeholders */
 
-  /* Backgrounds & surfaces */
-  --bg:             #fbf7f8;   /* Natural stone field */
-  --paper:          #fdf8f9;   /* Warm alabaster document sheet */
-  --surface:        #f7eff1;   /* Card & block background */
-  --surface-raised: #eddee2;   /* Hover surface */
+  /* Lines */
+  --border:         #e2e2df;
+  --border-subtle:  rgba(0, 0, 0, 0.08);
 
-  /* Structural tones */
-  --border:         #dcc9ce;   /* Soft wine border */
-  --border-subtle:  rgba(122, 46, 70, 0.12);
-  --divider:        #5c4f52;   /* Muted stone labels */
+  /* Accent — wine, used only for links & interaction */
+  --accent:         #7a2e46;
 
-  /* Accents — Wine */
-  --accent:           #7a2e46; /* Deep wine / burgundy */
-  --accent-dim:       rgba(122, 46, 70, 0.08);
-  --accent-glow:      rgba(122, 46, 70, 0.04);
-  --accent-secondary: #3d1622; /* Deep wine anchor */
+  /* Text */
+  --text:           #111111;
+  --text-muted:     #555555;
+  --text-subtle:    #888888;
 
-  /* Foreground (text) */
-  --text:           #1c1210;   /* Deep charcoal primary text */
-  --text-muted:     #4a3a3d;   /* Secondary text */
-  --text-subtle:    #8a7378;   /* Metadata & labels */
+  /* Code: inline code + Shiki's css-variables theme (astro.config.mjs) */
+  --code-bg:        var(--surface);
+  --code-color:     var(--text);
+  --astro-code-color-text:        #111111;
+  --astro-code-color-background:  #f2f2f0;
+  --astro-code-token-constant:    #333333;
+  --astro-code-token-string:      #555555;
+  --astro-code-token-comment:     #999999;
+  --astro-code-token-keyword:     #7a2e46;
+  --astro-code-token-parameter:   #333333;
+  --astro-code-token-function:    #111111;
+  --astro-code-token-punctuation: #888888;
+  --astro-code-token-link:        #7a2e46;
 
-  /* Status */
-  --status-progress: #7a2e46;  /* Wine */
-  --status-complete: #4a3a3d;  /* Stone */
-  --status-archived: #8a7378;  /* Muted mauve */
-
-  /* Shadows */
-  --shadow-sheet:  0 6px 24px -4px rgba(28, 18, 16, 0.06), 0 1px 3px rgba(28, 18, 16, 0.03);
-  --shadow-card:   0 2px 8px -1px rgba(28, 18, 16, 0.04);
-
-  /* Syntax-highlight tokens */
-  --astro-code-color-text:              #1c1210;
-  --astro-code-color-background:        #f7eff1;
-  --astro-code-token-constant:          #5c2136;
-  --astro-code-token-string:            #3d1622;
-  --astro-code-token-comment:           #8a7378;
-  --astro-code-token-keyword:           #7a2e46;
-  --astro-code-token-parameter:         #4a3a3d;
-  --astro-code-token-function:          #3d1622;
-  --astro-code-token-punctuation:       #8a7378;
-  --astro-code-token-link:              #7a2e46;
-
-  /* ───────────────────────────────────────────────
-     TYPOGRAPHY & METRICS
-     ─────────────────────────────────────────────── */
-  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body:    'IBM Plex Serif', Georgia, serif;
-  --font-mono:    'IBM Plex Mono', monospace;
-
-  /* Shape & Motion */
-  --radius:        4px;
-  --radius-lg:     8px;
-  --transition:    all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Headlines */
-  --h1-font-family:    var(--font-display);
-  --h1-font-size:      clamp(2.4rem, 5vw, 3.4rem);
-  --h1-font-weight:    700;
-  --h1-letter-spacing: -0.03em;
-  --h1-line-height:    1.1;
-
-  --h2-font-family:    var(--font-display);
-  --h2-font-size:      clamp(1.5rem, 3vw, 2rem);
-  --h2-font-weight:    700;
-  --h2-letter-spacing: -0.025em;
-  --h2-line-height:    1.15;
-
-  --h3-font-family:    var(--font-display);
-  --h3-font-size:      1.3rem;
-  --h3-font-weight:    700;
-  --h3-letter-spacing: -0.02em;
-
-  /* Body */
-  --body-font-family:  var(--font-body);
-  --body-font-size:    1.05rem;
-  --body-font-weight:  400;
-  --body-line-height:  1.7;
-
-  /* Code */
-  --code-font-family: var(--font-mono);
+  /* Type */
+  --font-display: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:    'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+  --body-font-size:   1rem;
+  --body-line-height: 1.7;
   --code-font-size:   0.875em;
-  --code-bg:          var(--surface);
-  --code-color:       var(--accent);
+
+  /* Shape & motion */
+  --radius:     2px;
+  --transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
   font-size: var(--body-font-size);
   line-height: var(--body-line-height);
-  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--text);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 code, kbd, samp {
-  font-family: var(--code-font-family);
+  font-family: var(--font-mono);
   font-size: var(--code-font-size);
   background: var(--code-bg);
   color: var(--code-color);
   padding: 0.15em 0.4em;
   border-radius: var(--radius);
-  border: 1px solid var(--border-subtle);
 }
 
-a {
-  color: var(--text);
-  text-decoration: none;
-  transition: var(--transition);
-}
-a:hover {
-  color: var(--accent);
-}
+a:hover { color: var(--accent); }

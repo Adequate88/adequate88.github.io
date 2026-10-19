@@ -17,8 +17,10 @@ import '../styles/focus-visible.css';
 import { ViewTransitions } from 'astro:transitions';
 
 const path = Astro.url.pathname;
-const isActive = (prefix: string) =>
-  prefix === '/' ? path === '/' : path.startsWith(prefix);
+// Each nav link is active for its own path plus any it absorbed (Work covers projects and posts).
+const sections: Record<string, string[]> = { '/work': ['/work', '/projects', '/blog'], '/about': ['/about'] };
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : (sections[href] ?? [href]).some(p => path.startsWith(p));
 
 // Absolute URLs degrade gracefully if `site` isn't set in astro.config.mjs.
 const base = Astro.site ?? new URL(Astro.url.origin);
@@ -63,8 +65,7 @@ const isHome = path === '/' || path === '';
 
   <!-- Icons -->
   <link rel="icon" type="image/svg+xml" href="/assets/logo-monogram.svg" />
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-  <meta name="theme-color" content="#cabfa8" />
+  <meta name="theme-color" content="#fafaf9" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -86,12 +87,12 @@ const isHome = path === '/' || path === '';
   <meta name="twitter:image:alt" content={ogImageAlt} />
 
   <!-- Feeds & discovery -->
-  <link rel="alternate" type="application/rss+xml" title="Alessandro Salo — Blog" href="/rss.xml" />
+  <link rel="alternate" type="application/rss+xml" title="Alessandro Salo — Work" href="/rss.xml" />
   <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <ViewTransitions />
   <slot name="head" />
 </head>
@@ -99,46 +100,37 @@ const isHome = path === '/' || path === '';
   <button class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false" title="Switch to dark mode" transition:persist>
     <svg class="ic-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 13.2A8.5 8.5 0 1 1 10.8 2.5a7 7 0 0 0 10.7 10.7z"></path></svg>
     <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"></circle><line x1="12" y1="1.5" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22.5"></line><line x1="3.5" y1="3.5" x2="5.3" y2="5.3"></line><line x1="18.7" y1="18.7" x2="20.5" y2="20.5"></line><line x1="1.5" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22.5" y2="12"></line><line x1="3.5" y1="20.5" x2="5.3" y2="18.7"></line><line x1="18.7" y1="5.3" x2="20.5" y2="3.5"></line></svg>
+    <span class="tt-label tt-dark" aria-hidden="true">Dark</span>
+    <span class="tt-label tt-light" aria-hidden="true">Light</span>
   </button>
 
   <nav class="spine" transition:persist>
-    <div class="spine-head">
-      <a class="spine-brand" href="/" id="brand-link">AS<b>.</b></a>
-    </div>
+    <a class="spine-brand" href="/" id="brand-link">AS<b>.</b></a>
     <div class="spine-links">
       <a class:list={[{ active: isActive('/') }]} href="/">Home</a>
-      <a class:list={[{ active: isActive('/projects') }]} href="/projects">Projects</a>
-      <a class:list={[{ active: isActive('/blog') }]} href="/blog">Writing</a>
+      <a class:list={[{ active: isActive('/work') }]} href="/work" data-match="/work /projects /blog">Work</a>
       <a class:list={[{ active: isActive('/about') }]} href="/about">About</a>
       <a href="https://github.com/Adequate88" target="_blank" rel="noopener">GitHub&#8201;&#8599;</a>
     </div>
   </nav>
 
   <script>
-    // Update active state in persistent spine
+    // The spine persists across view transitions, so its active state is refreshed client-side.
     document.addEventListener('astro:page-load', () => {
       const path = window.location.pathname;
-      const links = document.querySelectorAll('.spine-links a');
-      links.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === '/') {
-          link.classList.toggle('active', path === '/');
-        } else if (href && path.startsWith(href)) {
-          link.classList.toggle('active', true);
-        } else {
-          link.classList.remove('active');
-        }
+      document.querySelectorAll<HTMLAnchorElement>('.spine-links a').forEach(link => {
+        const href = link.getAttribute('href') ?? '';
+        if (href.startsWith('http')) return;
+        const prefixes = (link.dataset.match ?? href).split(' ');
+        link.classList.toggle('active', href === '/' ? path === '/' : prefixes.some(p => path.startsWith(p)));
       });
+    });
 
-      // Scroll to top if brand clicked on home
-      const brand = document.getElementById('brand-link');
-      if (brand) {
-        brand.addEventListener('click', (e) => {
-          if (window.location.pathname === '/') {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        });
+    // Brand link scrolls to top when already on the home page. Bound once: the spine is persisted.
+    document.getElementById('brand-link')?.addEventListener('click', (e) => {
+      if (window.location.pathname === '/') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
   </script>

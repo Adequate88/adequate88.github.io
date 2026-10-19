@@ -19,23 +19,24 @@ const { title, date, excerpt, tags, image, readtime } = post.data;
 const fmtDate = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
-<BaseLayout title={`${title} — Alessandro Salo`} description={excerpt}>
+<BaseLayout title={`${title} — Alessandro Salo`} description={excerpt} image={image}>
 
   <article class="doc">
 
-    <div class="post-top-nav">
-      <a href="/blog" class="post-back-top">&#8592; This ain't it? Go back.</a>
-    </div>
+    <nav class="post-top-nav">
+      <a href="/work" class="post-back">&#8592; This ain't it? Go back.</a>
+    </nav>
 
-    <div class="post-head">
-            <h1>{title}</h1>
+    <header class="post-head">
+      <p class="smallcaps post-meta">Blog - <time datetime={date.toISOString()}>{fmtDate(date)}</time>{readtime && ` - ${readtime}`}</p>
+      <h1>{title}</h1>
       <p class="lead">{excerpt}</p>
       {tags.length > 0 && (
         <div class="post-tags">
           {tags.map(tag => <span class="tag">{tag}</span>)}
         </div>
       )}
-    </div>
+    </header>
 
     {image && <img src={image} alt="" class="post-hero-image" decoding="async" />}
 
@@ -43,9 +44,9 @@ const fmtDate = (d: Date) =>
       <Content />
     </div>
 
-    <div class="post-foot">
-      <a href="/blog" class="post-back">&#8592; Thanks for reading:)</a>
-    </div>
+    <footer class="post-foot">
+      <a href="/work" class="post-back">&#8592; Thanks for reading:)</a>
+    </footer>
 
     <Colophon />
   </article>
