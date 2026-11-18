@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Colophon from '../components/Colophon.astro';
+import Spectrum from '../components/Spectrum.astro';
 ---
 <BaseLayout title="Home - Alessandro Salo">
 
@@ -10,6 +11,7 @@ import Colophon from '../components/Colophon.astro';
       <span class="kicker"><span class="smallcaps">Portfolio</span></span>
       <h1>Alessandro Salo.</h1>
       <p class="role">Aspiring graphics and game engine programmer</p>
+      <Spectrum spectrum="sun" class="spec--hero" main />
     </header>
 
     <!-- Bio / Lede & Section Navigation Buttons -->
@@ -17,8 +19,8 @@ import Colophon from '../components/Colophon.astro';
       <p>I'm constantly catching up to everything <strong>rendering</strong> and <strong>game engine</strong> related. I also make algorithms go fast with <strong>low/hardware-level optimisation</strong> and <strong>GPU programming</strong>.</p>
 
       <nav class="hero-links" aria-label="Sections">
-        <a class="ulink" href="/work">Work</a><span class="sep" aria-hidden="true">/</span>
-        <a class="ulink" href="/about">About</a><span class="sep" aria-hidden="true">/</span>
+        <a class="ulink" href="/work" data-spectrum="hydrogen">Work</a><span class="sep" aria-hidden="true">/</span>
+        <a class="ulink" href="/about" data-spectrum="helium">About</a><span class="sep" aria-hidden="true">/</span>
         <a class="ulink" href="/assets/cv.pdf">CV&#8201;&#8595;</a>
       </nav>
     </div>

@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Colophon from '../../components/Colophon.astro';
-import '../../styles/prose.css';
+import Spectrum from '../../components/Spectrum.astro';
 import { getCollection } from 'astro:content';
 import { monthYear } from '../../lib/entries';
+import { spectrumKey } from '../../lib/image-spectrum';
+import '../../styles/figures.css';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
@@ -18,6 +20,7 @@ const { Content } = await project.render();
 const { title, subtitle, description, tags, year, month, image, github } = project.data;
 const date = year ? monthYear(new Date(Number(year), Number(month ?? 1) - 1, 1)) : undefined;
 const shareImage = image ? '/' + image.replace(/^\//, '') : undefined;
+const spectrum = await spectrumKey(`/projects/${project.slug}`, shareImage);
 ---
 <BaseLayout title={`${title} — Alessandro Salo`} description={description} image={shareImage}>
 
@@ -30,6 +33,7 @@ const shareImage = image ? '/' + image.replace(/^\//, '') : undefined;
     <header class="post-head">
       <p class="smallcaps post-meta">Project{date && ` - ${date}`}</p>
       <h1>{title}</h1>
+      <Spectrum spectrum={spectrum} main />
       {subtitle && <p class="post-subtitle">{subtitle}</p>}
       <p class="lead">{description}</p>
       {tags.length > 0 && (
@@ -56,3 +60,8 @@ const shareImage = image ? '/' + image.replace(/^\//, '') : undefined;
   </article>
 
 </BaseLayout>
+
+<script>
+  import { initFigures } from '../../lib/figures';
+  document.addEventListener('astro:page-load', initFigures);
+</script>

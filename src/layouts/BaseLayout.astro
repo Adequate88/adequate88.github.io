@@ -12,8 +12,10 @@ const {
 
 import '../styles/tokens.css';
 import '../styles/document.css';
+import '../styles/prose.css';
 import '../styles/dark-mode.css';
 import '../styles/focus-visible.css';
+import '../styles/fraunhofer.css';
 import { ViewTransitions } from 'astro:transitions';
 
 const path = Astro.url.pathname;
@@ -65,7 +67,7 @@ const isHome = path === '/' || path === '';
 
   <!-- Icons -->
   <link rel="icon" type="image/svg+xml" href="/assets/logo-monogram.svg" />
-  <meta name="theme-color" content="#fafaf9" />
+  <meta name="theme-color" content="#f3f4f7" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -92,14 +94,14 @@ const isHome = path === '/' || path === '';
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,200;0,300;0,400;1,300;1,400&family=Instrument+Sans:wght@400..600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <ViewTransitions />
   <slot name="head" />
 </head>
 <body class:list={[{ 'nav-hidden': isHome }]}>
   <button class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false" title="Switch to dark mode" transition:persist>
-    <svg class="ic-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 13.2A8.5 8.5 0 1 1 10.8 2.5a7 7 0 0 0 10.7 10.7z"></path></svg>
-    <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"></circle><line x1="12" y1="1.5" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22.5"></line><line x1="3.5" y1="3.5" x2="5.3" y2="5.3"></line><line x1="18.7" y1="18.7" x2="20.5" y2="20.5"></line><line x1="1.5" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22.5" y2="12"></line><line x1="3.5" y1="20.5" x2="5.3" y2="18.7"></line><line x1="18.7" y1="5.3" x2="20.5" y2="3.5"></line></svg>
+    <!-- A tiny spectrum previewing the other theme: emission (dark) or absorption (light) -->
+    <span class="tt-spec" aria-hidden="true"><i></i><i></i><i></i></span>
     <span class="tt-label tt-dark" aria-hidden="true">Dark</span>
     <span class="tt-label tt-light" aria-hidden="true">Light</span>
   </button>
@@ -107,9 +109,9 @@ const isHome = path === '/' || path === '';
   <nav class="spine" transition:persist>
     <a class="spine-brand" href="/" id="brand-link">AS<b>.</b></a>
     <div class="spine-links">
-      <a class:list={[{ active: isActive('/') }]} href="/">Home</a>
-      <a class:list={[{ active: isActive('/work') }]} href="/work" data-match="/work /projects /blog">Work</a>
-      <a class:list={[{ active: isActive('/about') }]} href="/about">About</a>
+      <a class:list={[{ active: isActive('/') }]} href="/" data-spectrum="sun">Home</a>
+      <a class:list={[{ active: isActive('/work') }]} href="/work" data-match="/work /projects /blog" data-spectrum="hydrogen">Work</a>
+      <a class:list={[{ active: isActive('/about') }]} href="/about" data-spectrum="helium">About</a>
       <a href="https://github.com/Adequate88" target="_blank" rel="noopener">GitHub&#8201;&#8599;</a>
     </div>
   </nav>
@@ -133,6 +135,39 @@ const isHome = path === '/' || path === '';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
+  </script>
+
+  <script>
+    // The page's main spectral band follows you around: its lines slide to the
+    // next page's spectrum on navigation, and to a link's spectrum while it's hovered.
+    import { show } from '../lib/spectrum';
+
+    const band = () => document.querySelector<HTMLElement>('.spec[data-main]');
+    let leaving: string | undefined;
+
+    document.addEventListener('astro:before-swap', () => { leaving = band()?.dataset.shown; });
+    document.addEventListener('astro:after-swap', () => {
+      const b = band();
+      if (!b || !leaving) return;
+      const target = b.dataset.spectrum!;
+      b.classList.add('spec--arrived');   // skip the first-visit scan
+      show(b, leaving, true);
+      requestAnimationFrame(() => show(b, target));
+    });
+
+    // Links carrying a spectrum preview it on the main band (archive rows preview in their own card).
+    const preview = (e: Event, on: boolean) => {
+      const link = (e.target as Element).closest?.<HTMLElement>('a[data-spectrum]');
+      if (!link || link.closest('.row')) return;
+      const related = (e as PointerEvent | FocusEvent).relatedTarget;
+      if (related instanceof Node && link.contains(related)) return;
+      const b = band();
+      if (b) show(b, on ? link.dataset.spectrum! : b.dataset.spectrum!);
+    };
+    document.addEventListener('pointerover', e => preview(e, true));
+    document.addEventListener('pointerout', e => preview(e, false));
+    document.addEventListener('focusin', e => preview(e, true));
+    document.addEventListener('focusout', e => preview(e, false));
   </script>
 
   <div class="stage" transition:animate="fade">

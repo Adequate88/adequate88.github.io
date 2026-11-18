@@ -1,6 +1,6 @@
 /* ============================================================
    document.css — site layout and page styles
-   (article/post styles live in prose.css)
+   (article/post styles live in prose.css, loaded on every page so the theme can layer over it)
    ============================================================ */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -155,7 +155,7 @@ body.nav-hidden .spine { display: none !important; }
   aspect-ratio: 16 / 9;
   border-radius: var(--radius);
   overflow: hidden;
-  background: #111;
+  background: var(--surface);
 }
 .feat-img img {
   width: 100%;

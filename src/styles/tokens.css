@@ -1,50 +1,56 @@
 /* ============================================================
    Tokens — Alessandro Salo Portfolio Design System
-   Minimal: monochrome with a single wine accent
-   (dark-mode values live in dark-mode.css)
+   Fraunhofer: a spectrum read through a spectroscope. A light serif over
+   a calm page; colour lives only in thin spectral bands and their lines
+   (dark-mode values live in dark-mode.css; component styling in fraunhofer.css)
    ============================================================ */
 
 :root {
   /* Surfaces */
-  --bg:             #fafaf9;
-  --surface:        #f2f2f0;   /* Code blocks & placeholders */
+  --bg:             #f3f4f7;
+  --surface:        #e8e9ef;   /* Code blocks & placeholders */
 
   /* Lines */
-  --border:         #e2e2df;
-  --border-subtle:  rgba(0, 0, 0, 0.08);
+  --border:         #d8dae3;
+  --border-subtle:  rgba(22, 24, 31, 0.08);
 
-  /* Accent — wine, used only for links & interaction */
-  --accent:         #7a2e46;
+  /* Accent — spectroscope blue, used only for links & interaction */
+  --accent:         #2b43b8;
 
   /* Text */
-  --text:           #111111;
-  --text-muted:     #555555;
-  --text-subtle:    #888888;
+  --text:           #16181f;
+  --text-muted:     #4f5260;
+  --text-subtle:    #868998;
+
+  /* Spectrum: 380 → 760 nm, violet on the left as a spectroscope shows it
+     (stops mirror src/lib/spectrum.ts). --line is an absorption line. */
+  --stops:          #7a5cff 0%, #3f8cff 18%, #3fb8ff 26%, #4fdc8c 40%, #f2e65a 53%, #ffad42 61%, #ff4d5e 74%, #c42a3e 100%;
+  --spectrum:       linear-gradient(90deg, var(--stops));
+  --line:           rgba(22, 24, 31, 0.9);
+  --sodium:         #d69a00;
 
   /* Code: inline code + Shiki's css-variables theme (astro.config.mjs) */
-  --code-bg:        var(--surface);
-  --code-color:     var(--text);
-  --astro-code-color-text:        #111111;
-  --astro-code-color-background:  #f2f2f0;
+  --astro-code-color-text:        #16181f;
+  --astro-code-color-background:  #e8e9ef;
   --astro-code-token-constant:    #333333;
   --astro-code-token-string:      #555555;
-  --astro-code-token-comment:     #999999;
-  --astro-code-token-keyword:     #7a2e46;
+  --astro-code-token-comment:     #5c606d;
+  --astro-code-token-keyword:     #2b43b8;
   --astro-code-token-parameter:   #333333;
   --astro-code-token-function:    #111111;
   --astro-code-token-punctuation: #888888;
-  --astro-code-token-link:        #7a2e46;
+  --astro-code-token-link:        #2b43b8;
 
   /* Type */
-  --font-display: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body:    'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Spectral', Georgia, serif;
+  --font-body:    'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
   --body-font-size:   1rem;
   --body-line-height: 1.7;
   --code-font-size:   0.875em;
 
   /* Shape & motion */
-  --radius:     2px;
+  --radius:     3px;
   --transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
@@ -64,8 +70,8 @@ h1, h2, h3, h4, h5, h6 {
 code, kbd, samp {
   font-family: var(--font-mono);
   font-size: var(--code-font-size);
-  background: var(--code-bg);
-  color: var(--code-color);
+  background: var(--surface);
+  color: var(--text);
   padding: 0.15em 0.4em;
   border-radius: var(--radius);
 }

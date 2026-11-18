@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { spectrumKey } from './image-spectrum';
 
 /**
  * One list of everything on the Work page: projects and blog posts,
@@ -13,6 +14,8 @@ export interface Entry {
   date: Date;
   href: string;
   image?: string;
+  /** Its spectral band: the cover image's spectrum, or a fingerprint of the URL. */
+  spectrum: string;
 }
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -23,7 +26,7 @@ export const monthYear = (d: Date) => `${monthName(d)} ${d.getFullYear()}`;
 const toPublicPath = (p?: string) => (p ? '/' + p.replace(/^\//, '') : undefined);
 
 export async function getEntries(): Promise<Entry[]> {
-  const projects = (await getCollection('projects')).map((p): Entry => ({
+  const projects = (await getCollection('projects')).map((p): Omit<Entry, 'spectrum'> => ({
     kind: 'Project',
     title: p.data.title,
     summary: p.data.description,
@@ -33,7 +36,7 @@ export async function getEntries(): Promise<Entry[]> {
     image: toPublicPath(p.data.image),
   }));
 
-  const posts = (await getCollection('blog')).map((p): Entry => ({
+  const posts = (await getCollection('blog')).map((p): Omit<Entry, 'spectrum'> => ({
     kind: 'Blog',
     title: p.data.title,
     summary: p.data.excerpt,
@@ -43,5 +46,6 @@ export async function getEntries(): Promise<Entry[]> {
     image: toPublicPath(p.data.image),
   }));
 
-  return [...projects, ...posts].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+  const all = await Promise.all([...projects, ...posts].map(async e => ({ ...e, spectrum: await spectrumKey(e.href, e.image) })));
+  return all.sort((a, b) => b.date.valueOf() - a.date.valueOf());
 }

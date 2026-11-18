@@ -1,0 +1,23 @@
+---
+/**
+ * Spectrum.astro — a thin spectral band (see src/lib/spectrum.ts).
+ *
+ * `spectrum` is an element name (sun, hydrogen, helium) or any other key,
+ * such as a page URL, which gets its own fingerprint. The page's main band
+ * is marked `main`: its lines slide to the next page's spectrum on
+ * navigation, and to a link's spectrum while that link is hovered.
+ */
+import { slots, resolve } from '../lib/spectrum';
+
+interface Props {
+  spectrum: string;
+  class?: string;
+  main?: boolean;
+}
+const { spectrum, class: className, main = false } = Astro.props;
+---
+<span class:list={['spec', className]} data-spectrum={spectrum} data-shown={spectrum} data-main={main ? '' : undefined} aria-hidden="true">
+  {slots(resolve(spectrum)).map((s, i) => (
+    <i style={`--x:${s.x};--w:${s.w};--c:${s.c};--on:${s.on};--n:${i}`}></i>
+  ))}
+</span>

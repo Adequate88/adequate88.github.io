@@ -1,0 +1,339 @@
+/* ============================================================
+   Fraunhofer — a spectrum read through a spectroscope.
+   Every page carries a thin spectral band (Spectrum.astro) with lines at
+   real wavelengths: sunlight on Home, hydrogen on Work, helium on About,
+   a fingerprint of its own for each project. Light mode reads it as an
+   absorption spectrum, dark mode as emission. The lines slide to the next
+   spectrum when you navigate, and preview a link's spectrum on hover.
+   Tokens live in tokens.css and dark-mode.css; this file layers the
+   component styling over document.css.
+   ============================================================ */
+
+body { font-size: 1rem; }
+h1, h2, h3 { font-weight: 300; letter-spacing: -.01em; }
+
+/* Labels: small sentence-case sans instead of tracked mono caps */
+.smallcaps,
+.spine-links a,
+.colophon .links,
+.colophon .sig,
+.post-back,
+.post-subtitle,
+.about-more summary,
+.feat-k,
+.feat-hint,
+.feat-read,
+.feat-meta,
+.row-s,
+.card-s,
+.card-ph,
+.tag,
+.theme-toggle {
+  font-family: var(--font-body);
+  text-transform: none;
+  letter-spacing: .005em;
+}
+.smallcaps { font-size: .8rem; font-weight: 500; }
+
+/* ── The band ── */
+.spec {
+  position: relative;
+  display: block;
+  width: min(100%, 34rem);
+  height: 4px;
+  --ease-spec: cubic-bezier(.65, 0, .25, 1);
+}
+
+/* The continuum: present in absorption (light), gone in emission (dark) */
+.spec::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--spectrum);
+  transition: opacity .7s ease;
+}
+.spec i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--x);
+  width: var(--w);
+  margin-left: calc(var(--w) / -2);
+  background: var(--line);
+  opacity: var(--on);
+  transition:
+    left .9s var(--ease-spec),
+    width .9s var(--ease-spec),
+    margin .9s var(--ease-spec),
+    opacity .5s ease,
+    background-color .7s ease;
+}
+:root[data-theme="dark"] .spec { background: rgba(255, 255, 255, .035); }
+:root[data-theme="dark"] .spec::before { opacity: 0; }
+:root[data-theme="dark"] .spec i { background: var(--c); }
+.spec--still::before, .spec--still i { transition: none !important; }
+
+/* Upright, violet at the top (the archive preview card) */
+.spec--v { width: 3px; height: auto; }
+.spec--v::before { background: linear-gradient(180deg, var(--stops)); }
+.spec--v i {
+  left: 0; right: 0;
+  top: var(--x);
+  bottom: auto;
+  width: auto;
+  height: var(--w);
+  margin: calc(var(--w) / -2) 0 0;
+  transition:
+    top .9s var(--ease-spec),
+    height .9s var(--ease-spec),
+    margin .9s var(--ease-spec),
+    opacity .5s ease,
+    background-color .7s ease;
+}
+
+/* Home: the band scans in, then the lines appear one by one */
+.spec--hero { height: 6px; margin-top: 2.1rem; }
+.spec--hero:not(.spec--arrived) {
+  clip-path: inset(0 100% 0 0);
+  animation: spec-scan 2s cubic-bezier(.45, 0, .2, 1) .45s forwards;
+}
+.spec--hero:not(.spec--arrived) i { animation: spec-line .6s ease calc(2.2s + var(--n) * 80ms) backwards; }
+@keyframes spec-scan { to { clip-path: inset(0 0 0 0); } }
+@keyframes spec-line { from { opacity: 0; } }
+
+.spec--page { margin-top: 1.5rem; }
+
+/* ── Links: the hairline becomes a strip of spectrum ── */
+.ulink {
+  font-weight: 500;
+  text-decoration: none;
+  padding-bottom: 3px;
+  background: linear-gradient(var(--border), var(--border)) 0 100% / 100% 1px no-repeat;
+  transition: color .2s, background-size .3s;
+}
+.ulink:hover {
+  color: var(--text);
+  background: var(--spectrum) 0 100% / 100% 2px no-repeat;
+}
+
+/* ── Nav ── */
+.spine-brand { font-family: var(--font-display); font-weight: 300; font-size: 1.6rem; letter-spacing: -.02em; }
+.spine-brand b { color: var(--sodium); }
+.spine-links a { font-size: .9rem; color: var(--text-subtle); position: relative; }
+.spine-links a.active,
+.spine-links a:hover { color: var(--text); }
+.spine-links a.active::before {
+  content: '';
+  position: absolute;
+  left: -1.4rem;
+  top: 50%;
+  width: .9rem;
+  height: 3px;
+  margin-top: -1.5px;
+  background: var(--spectrum) -18rem 0 / 34rem 100%;
+}
+@media (max-width: 1199px) { .spine-links a.active::before { left: 0; top: auto; bottom: .1rem; width: 100%; height: 2px; margin: 0; } }
+
+.theme-toggle { font-size: .78rem; background: transparent; border-color: var(--border); }
+.theme-toggle:hover { color: var(--text); border-color: var(--text-subtle); }
+
+/* The toggle's icon is a tiny spectrum of the theme it switches to:
+   emission (dark chip, lit lines) from light mode, absorption from dark. */
+.tt-spec {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 1px;
+  overflow: hidden;
+  background: #08090d;
+  box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .08);
+}
+.tt-spec::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--stops));
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.tt-spec i { position: absolute; top: 0; bottom: 0; width: 2px; transition: background-color .5s ease; }
+.tt-spec i:nth-child(1) { left: 26%; background: #3fb8ff; }
+.tt-spec i:nth-child(2) { left: 54%; background: #ffc54a; }
+.tt-spec i:nth-child(3) { left: 74%; background: #ff4d5e; }
+:root[data-theme="dark"] .tt-spec { background: transparent; box-shadow: none; }
+:root[data-theme="dark"] .tt-spec::before { opacity: 1; }
+:root[data-theme="dark"] .tt-spec i { background: #16181f; }
+
+/* ── Home: the one orchestrated moment ── */
+body.nav-hidden .stage { min-height: 100vh; display: flex; align-items: center; }
+body.nav-hidden .doc { width: 100%; }
+.head, .lede, .hero-links { text-align: left; justify-content: flex-start; }
+.head .kicker .smallcaps { font-size: .85rem; color: var(--text-subtle); }
+.head:not(.head--page) h1 {
+  font-weight: 200;
+  font-size: clamp(3.1rem, 9.6vw, 6.2rem);
+  letter-spacing: -.03em;
+  line-height: 1;
+  margin-left: -.05em;
+  animation: name-in 1s ease .1s both;
+}
+@keyframes name-in { from { opacity: 0; } }
+.head .role {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  color: var(--text-muted);
+  margin-top: 1.1rem;
+}
+.lede { padding-top: 1.75rem; }
+.lede p { margin: 0; font-size: 1.08rem; max-width: 46ch; }
+.lede p strong { font-weight: 500; }
+.hero-links { margin-top: 2.25rem; gap: .25rem 1.1rem; }
+.hero-links .sep { color: var(--text-subtle); opacity: .5; }
+
+/* ── Page headings ── */
+.head--page h1,
+.post-head h1,
+.about-head h1 {
+  font-weight: 200;
+  font-size: clamp(2.6rem, 6vw, 3.8rem);
+  letter-spacing: -.025em;
+  line-height: 1;
+}
+.about-head h1 { font-size: clamp(2.3rem, 4.6vw, 3.1rem); }
+.head-sub { font-size: 1.05rem; margin-top: .9rem; }
+
+/* ── Work ── */
+.feat-k { font-size: .8rem; letter-spacing: .01em; }
+.feat-t { font-family: var(--font-display); font-weight: 300; font-size: 2rem; letter-spacing: -.02em; }
+.feat-hint { font-size: .75rem; }
+.feat-meta { font-size: .82rem; }
+
+.arch-h { font-size: .85rem; }
+@media (min-width: 641px) { .yr { grid-template-columns: 5rem 1fr; } }
+.yr-h { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; font-weight: 400; letter-spacing: 0; text-transform: none; padding-top: 1.05rem; }
+.yr > div > .row:first-child { border-top-color: var(--border-subtle); }
+.row { padding: 1.05rem 0; }
+.row-t { font-family: var(--font-display); font-size: 1.32rem; font-weight: 400; letter-spacing: -.01em; line-height: 1.25; transition: color .2s; }
+.row-s { font-size: .82rem; margin-top: .3rem; }
+.row-k { font-size: .78rem; }
+.row:hover .row-t, .row.cur .row-t { color: var(--accent); }
+.row::before {
+  width: 14px; height: 3px; border-radius: 0; left: -1.4rem;
+  background: var(--spectrum) -18rem 0 / 34rem 100%;
+  transform: translateY(-50%) scaleX(0); transform-origin: left;
+}
+.row.cur::before { transform: translateY(-50%) scaleX(1); }
+.card-in { border-left: 0; padding-left: 1.25rem; }
+.card-in > .spec--v { position: absolute; left: 0; top: 0; bottom: 0; }
+.card-t { font-family: var(--font-display); font-size: 1.15rem; font-weight: 400; }
+.card-s { font-size: .78rem; }
+
+/* ── About ── */
+.about-photo { overflow: visible; }
+.about-photo img { border-radius: var(--radius); }
+.about-photo .spec { margin-top: .6rem; }
+.about-intro { font-size: 1.05rem; }
+.about-intro em, .about-more em { font-family: var(--font-display); font-style: italic; font-weight: 300; font-size: 1.1em; line-height: 1; }
+.about-facts { border-top-color: var(--border-subtle); }
+.about-facts h2 { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; font-weight: 400; color: var(--text); }
+.about-updated { font-family: var(--font-body); font-style: normal; font-size: .8rem; color: var(--text-subtle); }
+/* "The longer story": same voice as the site's "Read →" links, just not faint */
+.about-more summary {
+  list-style: none;
+  display: inline-flex; align-items: baseline; gap: .45rem;
+  font-size: .95rem; color: var(--text);
+}
+.about-more summary::-webkit-details-marker { display: none; }
+.about-more summary::after {
+  content: '\2192';
+  display: inline-block;
+  color: var(--accent);
+  transition: transform .15s ease;
+}
+.about-more summary:hover { color: var(--accent); }
+.about-more summary:hover::after { transform: translateX(3px); }
+.about-more[open] summary::after { transform: rotate(90deg); }
+.about-more summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ── Posts ── */
+.post-back { font-size: .85rem; }
+.post-subtitle { font-size: .88rem; }
+.post-head .lead { font-size: 1.1rem; }
+.post-head .spec { margin-top: 1.5rem; }
+.tag { font-size: .8rem; }
+.prose h2 { font-family: var(--font-display); font-weight: 300; font-size: 1.85rem; letter-spacing: -.02em; }
+.prose h3 { font-family: var(--font-display); font-weight: 400; font-style: italic; font-size: 1.35rem; }
+.prose strong { font-weight: 600; }
+.prose a { text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.prose blockquote { border-left: 3px solid; border-image: linear-gradient(180deg, var(--stops)) 1; }
+.prose blockquote p { font-family: var(--font-display); font-style: italic; font-size: 1.15rem; }
+
+/* ── Footer ── */
+.colophon { border-top-color: var(--border-subtle); }
+.colophon .links { font-size: .88rem; gap: 1.4rem; }
+.colophon .links a:hover { color: var(--text); }
+.colophon .sig { font-size: .82rem; }
+
+/* ── Reading strip (project and blog pages): sections as lines, progress as continuum ── */
+.toc {
+  position: fixed;
+  top: 0;
+  z-index: 50;
+  height: 3px;
+  background: var(--border);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s ease;
+}
+.toc--on { opacity: 1; pointer-events: auto; }
+.prose :is(h2, h4)[id] { scroll-margin-top: 2.5rem; }
+.toc-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--spectrum);
+  clip-path: inset(0 calc(100% - var(--p, 0%)) 0 0);
+}
+.toc a {
+  position: absolute;
+  top: 0;
+  left: var(--x);
+  width: 2px;
+  height: 11px;
+  margin-left: -1px;
+  background: var(--line);
+}
+.toc a.toc-minor { width: 1px; height: 6px; margin-left: -.5px; }
+.toc a::after { content: ''; position: absolute; inset: -4px -7px -8px; }   /* easier to hit */
+.toc a span {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  transform: translateX(-50%);
+  padding: .3rem .55rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  font: 500 .78rem/1.2 var(--font-body);
+  color: var(--text);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+}
+.toc a.toc-start span { transform: none; }
+.toc a.toc-end span { transform: translateX(-100%); }
+.toc a:hover span { opacity: 1; }
+:root[data-theme="dark"] .toc { background: rgba(255, 255, 255, .07); }
+:root[data-theme="dark"] .toc-fill { background: rgba(255, 255, 255, .16); }
+:root[data-theme="dark"] .toc a { background: var(--c); opacity: .35; transition: opacity .3s ease; }
+:root[data-theme="dark"] .toc a.toc-read,
+:root[data-theme="dark"] .toc a:hover { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .head h1, .spec--hero, .spec--hero i { animation: none !important; clip-path: none !important; }
+  .spec::before, .spec i { transition: none; }
+}

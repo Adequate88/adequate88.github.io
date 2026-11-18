@@ -1,27 +1,29 @@
 :root[data-theme="dark"] {
   /* Surfaces */
-  --bg:             #111111;
-  --surface:        #1a1a1a;
+  --bg:             #08090d;
+  --surface:        #13151c;
   /* Lines */
-  --border:         #2a2a2a;
-  --border-subtle:  rgba(255, 255, 255, 0.08);
-  /* Accent — dusty rose, desaturated for readability on dark */
-  --accent:         #c98a9c;
+  --border:         #242733;
+  --border-subtle:  rgba(233, 234, 240, 0.07);
+  /* Accent — pale spectroscope blue, for readability on dark */
+  --accent:         #9fb2ff;
   /* Text */
-  --text:           #ededed;
-  --text-muted:     #a3a3a3;
-  --text-subtle:    #737373;
+  --text:           #e9eaf0;
+  --text-muted:     #a3a6b4;
+  --text-subtle:    #6c6f7e;
+  /* Spectrum: emission — the lines light up in their own colour */
+  --sodium:         #ffc54a;
   /* Code */
-  --astro-code-color-text:        #ededed;
-  --astro-code-color-background:  #1a1a1a;
+  --astro-code-color-text:        #e9eaf0;
+  --astro-code-color-background:  #13151c;
   --astro-code-token-constant:    #d4d4d4;
   --astro-code-token-string:      #a3a3a3;
-  --astro-code-token-comment:     #737373;
-  --astro-code-token-keyword:     #c98a9c;
+  --astro-code-token-comment:     #9a9eab;
+  --astro-code-token-keyword:     #9fb2ff;
   --astro-code-token-parameter:   #d4d4d4;
   --astro-code-token-function:    #ededed;
   --astro-code-token-punctuation: #737373;
-  --astro-code-token-link:        #c98a9c;
+  --astro-code-token-link:        #9fb2ff;
 }
 
 /* Smooth transitions for theme toggle */
@@ -35,7 +37,8 @@
 }
 
 /* Theme toggle button — a labelled pill so it reads as a control at a glance.
-   It shows the theme you'd switch TO: "Dark" (moon) in light mode, "Light" (sun) in dark mode. */
+   It shows the theme you'd switch TO: "Dark" in light mode, "Light" in dark mode
+   (its little spectrum is styled in fraunhofer.css). */
 .theme-toggle {
   position: fixed;
   top: clamp(1rem, 3vw, 2rem);
@@ -58,12 +61,9 @@
   transition: color .15s ease, border-color .15s ease;
 }
 .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
-.theme-toggle svg { width: 14px; height: 14px; display: block; flex-shrink: 0; }
-.theme-toggle .ic-sun,  .theme-toggle .tt-light { display: none; }
-.theme-toggle .ic-moon, .theme-toggle .tt-dark  { display: block; }
-:root[data-theme="dark"] .theme-toggle .ic-sun,
+.theme-toggle .tt-light { display: none; }
+.theme-toggle .tt-dark  { display: block; }
 :root[data-theme="dark"] .theme-toggle .tt-light { display: block; }
-:root[data-theme="dark"] .theme-toggle .ic-moon,
 :root[data-theme="dark"] .theme-toggle .tt-dark  { display: none; }
 
 @media (max-width: 1199px) {

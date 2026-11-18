@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Colophon from '../components/Colophon.astro';
+import Spectrum from '../components/Spectrum.astro';
 
 const now = {
   updated: 'July 2026',
@@ -24,6 +25,7 @@ const education = [
     <header class="about-head">
       <div class="about-photo">
         <img src="/assets/me.jpeg" alt="A portrait of Alessandro Salo." width="746" height="1066" decoding="async" />
+        <Spectrum spectrum="helium" main />
       </div>
       <div>
         <h1>Hi, I'm Alessandro.</h1>

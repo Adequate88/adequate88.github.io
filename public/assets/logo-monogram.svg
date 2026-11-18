@@ -1,5 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" font-family="Space Grotesk, sans-serif" font-weight="700" letter-spacing="-6">
-  <rect width="128" height="128" fill="#f7eff1"/>
-  <text x="14" y="76" font-size="78" fill="#1c1210">AS</text>
-  <rect x="14" y="90" width="34" height="4" fill="#7a2e46"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" font-family="Spectral, Georgia, serif" font-weight="300" letter-spacing="-3">
+  <style>
+    .bg { fill: #f3f4f7; } .fg { fill: #16181f; } .ln { fill: #16181f; } .co { opacity: 1; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #08090d; } .fg { fill: #e9eaf0; } .co { opacity: 0; }
+      .l1 { fill: #3fb8ff; } .l2 { fill: #f2c94a; } .l3 { fill: #ff4d5e; }
+    }
+  </style>
+  <defs>
+    <linearGradient id="spectrum">
+      <stop offset="0" stop-color="#7a5cff"/><stop offset=".26" stop-color="#3fb8ff"/>
+      <stop offset=".40" stop-color="#4fdc8c"/><stop offset=".53" stop-color="#f2e65a"/>
+      <stop offset=".61" stop-color="#ffad42"/><stop offset=".74" stop-color="#ff4d5e"/>
+      <stop offset="1" stop-color="#c42a3e"/>
+    </linearGradient>
+  </defs>
+  <rect class="bg" width="128" height="128"/>
+  <text class="fg" x="12" y="80" font-size="80">AS</text>
+  <rect class="co" x="14" y="94" width="100" height="6" fill="url(#spectrum)"/>
+  <rect class="ln l1" x="41" y="94" width="3" height="6"/>
+  <rect class="ln l2" x="68" y="94" width="3" height="6"/>
+  <rect class="ln l3" x="86" y="94" width="3" height="6"/>
 </svg>

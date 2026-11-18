@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Colophon from '../components/Colophon.astro';
+import Spectrum from '../components/Spectrum.astro';
 import { getEntries, monthName, monthYear } from '../lib/entries';
 
 const entries = await getEntries();
@@ -19,10 +20,11 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
     <header class="head head--page">
       <h1>Work.</h1>
       <p class="head-sub">Projects and blog posts on rendering, GPUs and making things fast.</p>
+      <Spectrum spectrum="hydrogen" class="spec--page" main />
     </header>
 
     {featured && (
-      <a class="feat" href={featured.href}>
+      <a class="feat" href={featured.href} data-spectrum={featured.spectrum}>
         <div class="feat-img">
           <img src={featured.image} alt="" decoding="async" />
           <div class="feat-ov">
@@ -48,7 +50,7 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
                 <h3 class="smallcaps yr-h">{year}</h3>
                 <div>
                   {archive.filter(e => e.date.getFullYear() === year).map(e => (
-                    <a class="row" href={e.href}
+                    <a class="row" href={e.href} data-spectrum={e.spectrum}
                        data-img={e.image ?? ''} data-title={e.title} data-summary={e.summary}
                        data-meta={`${e.kind} - ${monthYear(e.date)}`} data-stack={e.stack}>
                       <span>
@@ -66,6 +68,7 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
           <!-- Preview card in the right margin (wide screens only); shown while an entry is hovered. -->
           <aside class="card" aria-hidden="true">
             <div class="card-in">
+              <Spectrum spectrum="hydrogen" class="spec--v" />
               <div class="card-img"></div>
               <span class="smallcaps card-m"></span>
               <span class="card-t"></span>
@@ -81,6 +84,8 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
   </article>
 
   <script>
+    import { show as showSpectrum } from '../lib/spectrum';
+
     function initCard() {
       const card = document.querySelector<HTMLElement>('.card');
       const rows = document.querySelectorAll<HTMLAnchorElement>('.row');
@@ -98,7 +103,11 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
         current?.classList.remove('cur');
         current = row;
         row.classList.add('cur');
-        const { img: src, title, summary, meta, stack } = row.dataset;
+        const { img: src, title, summary, meta, stack, spectrum } = row.dataset;
+        const band = card.querySelector<HTMLElement>('.spec');
+        // The first row shown places its lines directly; after that they slide between projects.
+        if (band && spectrum) showSpectrum(band, spectrum, !card.dataset.shownOnce);
+        card.dataset.shownOnce = '1';
         if (src) {
           const el = document.createElement('img');
           el.src = src;
