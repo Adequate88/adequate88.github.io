@@ -181,10 +181,39 @@ function colSwitch(fig: HTMLElement) {
   fig.querySelectorAll<HTMLElement>('[data-goto]').forEach(el => el.addEventListener('click', () => choose('scene', el.dataset.goto!)));
 }
 
+/* ── Further reading: shelf chips filter the cards, arrows page through them ── */
+function reading(fig: HTMLElement) {
+  if (!once(fig)) return;
+  const track = fig.querySelector<HTMLElement>('.fx-reading-track');
+  if (!track) return;
+  const cards = [...track.querySelectorAll<HTMLElement>('.fx-read')];
+  const chips = [...fig.querySelectorAll<HTMLButtonElement>('[data-shelf]')].filter(b => b.tagName === 'BUTTON');
+  const [prev, next] = [...fig.querySelectorAll<HTMLButtonElement>('[data-step]')];
+  const ends = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    prev.disabled = track.scrollLeft <= 2;
+    next.disabled = track.scrollLeft >= max - 2;
+    track.classList.toggle('is-end', track.scrollLeft >= max - 2);
+  };
+  chips.forEach(chip => chip.addEventListener('click', () => {
+    const shelf = chip.dataset.shelf!;
+    chips.forEach(c => c.setAttribute('aria-pressed', String(c === chip)));
+    cards.forEach(card => { card.hidden = shelf !== 'all' && card.dataset.shelf !== shelf; });
+    track.scrollTo({ left: 0 });
+    ends();
+  }));
+  [prev, next].forEach(b => b.addEventListener('click', () =>
+    track.scrollBy({ left: Number(b.dataset.step) * track.clientWidth * .8, behavior: 'smooth' })));
+  track.addEventListener('scroll', ends, { passive: true });
+  new ResizeObserver(ends).observe(track);
+  ends();
+}
+
 export function initFigures() {
   document.querySelectorAll<HTMLElement>('[data-fx="colswitch"]').forEach(colSwitch);
   document.querySelectorAll<HTMLElement>('[data-fx="views"]').forEach(views);
   document.querySelectorAll<HTMLElement>('[data-fx="compare"]').forEach(compare);
   document.querySelectorAll<HTMLElement>('[data-fx="codetabs"]').forEach(codeTabs);
+  document.querySelectorAll<HTMLElement>('[data-fx="reading"]').forEach(reading);
   tooltips(document);
 }

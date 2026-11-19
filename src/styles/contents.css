@@ -1,0 +1,203 @@
+/* ============================================================
+   contents.css — a post's sections (components/Contents.astro)
+   The rail is a spectrum turned on its side: in light mode a continuum
+   that fills as you read, crossed by dark absorption lines; in dark mode
+   the lines themselves light up in their own colour.
+   lib/contents.ts picks the mode from the room beside the text:
+   .contents--rail sits in the margin, .contents--pill is a button at the
+   bottom that opens the list. Without JS it's a plain list above the post.
+   ============================================================ */
+
+/* ── The list (shared) ── */
+.contents { margin: 0 0 2.5rem; }
+.contents-title {
+  margin-bottom: .7rem;
+  font-family: var(--font-mono);
+  font-size: .66rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+.contents-body { position: relative; }
+.contents ol { list-style: none; }
+
+/* The band: a 3px continuum, clipped to how far you've read */
+.contents-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  width: 3px;
+  background: var(--border);
+}
+.contents-rail::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--stops));
+  clip-path: inset(0 0 calc(100% - var(--fill, 0px)) 0);
+}
+
+.contents-link {
+  position: relative;
+  display: block;
+  padding: .3rem 0 .3rem 1.35rem;
+  font: 400 .82rem/1.35 var(--font-body);
+  color: var(--text-subtle);
+  text-wrap: pretty;
+  transition: color .2s ease;
+}
+.contents-link--minor { padding-left: 2.1rem; font-size: .76rem; }
+.contents-link:hover,
+.contents-link.is-active { color: var(--text); }
+.contents-link.is-active { font-weight: 500; }
+
+/* Each section is a line across the band */
+.contents-link::before {
+  content: '';
+  position: absolute;
+  top: calc(.3rem + .675em - 1px);
+  left: 0;
+  width: 11px;
+  height: 2px;
+  background: var(--text-subtle);
+  opacity: .45;
+  transition: width .25s ease, opacity .25s ease, background-color .25s ease;
+}
+.contents-link--minor::before { top: calc(.3rem + .675em - .5px); left: 2.5px; width: 6px; height: 1px; }
+.contents-link.is-read::before,
+.contents-link.is-active::before { background: var(--line); opacity: 1; }
+.contents-link--major.is-active::before { width: 16px; }
+.contents-link--minor.is-active::before { width: 10px; }
+
+:root[data-theme="dark"] .contents-rail { background: rgba(255, 255, 255, .07); }
+:root[data-theme="dark"] .contents-rail::after { background: rgba(255, 255, 255, .16); }
+:root[data-theme="dark"] .contents-link::before { background: var(--c); opacity: .35; }
+:root[data-theme="dark"] .contents-link.is-read::before,
+:root[data-theme="dark"] .contents-link.is-active::before,
+:root[data-theme="dark"] .contents-link:hover::before { background: var(--c); opacity: 1; }
+
+/* Only the section you're in shows its subsections (all show without JS) */
+.contents-sub {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows .3s ease;
+}
+.contents-sub > ol { min-height: 0; overflow: hidden; }
+.contents[data-live] .contents-section:not(.is-open) > .contents-sub { grid-template-rows: 0fr; }
+
+.contents-toggle { display: none; }
+
+/* ── Rail: fixed in the margin beside the text (left and width set by lib/contents.ts) ── */
+.contents--rail {
+  position: fixed;
+  z-index: 5;
+  top: 6rem;
+  left: var(--rail-left);
+  width: var(--rail-width);
+  margin: 0;
+}
+.contents--rail .contents-panel {
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.contents--rail .contents-panel::-webkit-scrollbar { display: none; }
+
+/* ── Pill: a button at the bottom that opens the list ── */
+.contents--pill {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  width: min(calc(100vw - 2rem), 25rem);
+  margin: 0;
+  transform: translate(-50%, 1.25rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.contents--pill.is-shown:not(.is-done) { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+
+.contents--pill .contents-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  width: 100%;
+  height: 42px;
+  padding: 0 1rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  box-shadow: 0 6px 24px rgba(22, 24, 31, .08);
+  color: var(--text);
+  font: 500 .82rem/1 var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+.contents--pill .contents-toggle:hover { border-color: var(--text-subtle); }
+/* How far through the post you are, as a strip of spectrum along the bottom */
+.contents--pill .contents-toggle::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--spectrum);
+  clip-path: inset(0 calc(100% - var(--progress, 0%)) 0 0);
+}
+.contents-count {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  color: var(--text-subtle);
+}
+.contents-now { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contents-chevron {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: 3px;
+  border-left: 1.5px solid var(--text-subtle);
+  border-top: 1.5px solid var(--text-subtle);
+  transform: rotate(45deg);
+  transition: transform .25s ease, margin .25s ease;
+}
+.contents--pill.is-open .contents-chevron { transform: rotate(225deg); margin-top: -3px; }
+
+.contents--pill .contents-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(100% + .6rem);
+  max-height: min(60vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem 1.1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: 0 12px 40px rgba(22, 24, 31, .12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(.5rem);
+  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s;
+}
+.contents--pill.is-open .contents-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+:root[data-theme="dark"] .contents--pill .contents-toggle,
+:root[data-theme="dark"] .contents--pill .contents-panel { box-shadow: 0 12px 40px rgba(0, 0, 0, .5); }
+
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents *, .contents *::before, .contents *::after { transition: none !important; }
+}
+@media print { .contents { display: none; } }

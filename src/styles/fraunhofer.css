@@ -290,7 +290,7 @@ body.nav-hidden .doc { width: 100%; }
   transition: opacity .4s ease;
 }
 .toc--on { opacity: 1; pointer-events: auto; }
-.prose :is(h2, h4)[id] { scroll-margin-top: 2.5rem; }
+.prose :is(h2, h3, h4)[id] { scroll-margin-top: 2.5rem; }
 .toc-fill {
   position: absolute;
   inset: 0;

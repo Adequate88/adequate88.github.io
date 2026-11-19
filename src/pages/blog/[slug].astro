@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Colophon from '../../components/Colophon.astro';
+import Contents from '../../components/Contents.astro';
 import { spectrumKey } from '../../lib/image-spectrum';
 import Spectrum from '../../components/Spectrum.astro';
 import { getCollection } from 'astro:content';
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 const { title, date, excerpt, tags, image, readtime } = post.data;
 
 const spectrum = await spectrumKey(`/blog/${post.slug}`, image);
@@ -45,6 +46,8 @@ const fmtDate = (d: Date) =>
 
     {image && <img src={image} alt="" class="post-hero-image" decoding="async" />}
 
+    <Contents headings={headings} />
+
     <div class="prose">
       <Content />
     </div>
@@ -60,5 +63,7 @@ const fmtDate = (d: Date) =>
 
 <script>
   import { initFigures } from '../../lib/figures';
+  import { initContents } from '../../lib/contents';
   document.addEventListener('astro:page-load', initFigures);
+  document.addEventListener('astro:page-load', initContents);
 </script>

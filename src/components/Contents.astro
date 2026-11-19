@@ -1,0 +1,62 @@
+---
+/**
+ * Contents.astro — a post's sections, for skipping around (see lib/contents.ts).
+ *
+ * Wide screens: a rail in the right margin, drawn as a vertical spectrum with
+ * each section as a line across it; the band fills in as you read.
+ * Narrow screens: a pill at the bottom naming the current section, which
+ * opens the same list. Without JS it's a plain list of links.
+ */
+import { colorAt, MIN_NM, MAX_NM } from '../lib/spectrum';
+import '../styles/contents.css';
+
+interface Heading { depth: number; slug: string; text: string }
+interface Props { headings: Heading[] }
+
+const all = Astro.props.headings.filter(h => h.depth === 2 || h.depth === 3);
+// Each entry gets the band's colour at its place in the list (violet first, red last).
+const color = (i: number) => colorAt(MIN_NM + (i / Math.max(1, all.length - 1)) * (MAX_NM - MIN_NM));
+
+type Entry = Heading & { c: string };
+const sections: (Entry & { subs: Entry[] })[] = [];
+all.forEach((h, i) => {
+  const entry = { ...h, c: color(i) };
+  if (h.depth === 2 || sections.length === 0) sections.push({ ...entry, subs: [] });
+  else sections[sections.length - 1].subs.push(entry);
+});
+---
+{sections.length >= 3 && (
+  <nav class="contents" aria-label="Contents" data-contents>
+    <button type="button" class="contents-toggle" aria-expanded="false" aria-controls="contents-panel">
+      <span class="contents-count"><span data-contents-index>1</span>/{sections.length}</span>
+      <span class="contents-now" data-contents-now>{sections[0].text}</span>
+      <span class="contents-chevron" aria-hidden="true"></span>
+    </button>
+    <div class="contents-panel" id="contents-panel">
+      <p class="contents-title">Contents</p>
+      <div class="contents-body">
+        <span class="contents-rail" aria-hidden="true"></span>
+        <ol class="contents-list">
+          {sections.map(s => (
+            <li class="contents-section">
+              <a class="contents-link contents-link--major" href={`#${s.slug}`} style={`--c:${s.c}`}>{s.text}</a>
+              {s.subs.length > 0 && (
+                <div class="contents-sub">
+                  <ol>
+                    {s.subs.map(sub => (
+                      <li><a class="contents-link contents-link--minor" href={`#${sub.slug}`} style={`--c:${sub.c}`}>{sub.text}</a></li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </nav>
+  <script is:inline>
+    // Out of the flow before first paint; lib/contents.ts then picks rail or pill.
+    document.currentScript.previousElementSibling.classList.add('contents--pill');
+  </script>
+)}
