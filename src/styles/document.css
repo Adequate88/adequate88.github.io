@@ -12,6 +12,7 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
+  min-height: 100svh; /* visible height with phone toolbars shown */
 }
 
 a { color: inherit; text-decoration: none; transition: var(--transition); }
@@ -278,7 +279,7 @@ body.nav-hidden .spine { display: none !important; }
 .card .card-in { opacity: 0; transition: opacity .2s; }
 .card.on .card-in { opacity: 1; }
 .card-img { aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden; background: var(--surface); }
-.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; animation: card-fade .3s ease; }
+.card-img img, .card-img video { width: 100%; height: 100%; object-fit: cover; display: block; animation: card-fade .3s ease; }
 .card-ph {
   display: flex;
   width: 100%;
@@ -302,7 +303,7 @@ body.nav-hidden .spine { display: none !important; }
   .row::before { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .feat-img img, .feat-ov, .feat-body, .card-in, .card-img img { transition: none; animation: none; }
+  .feat-img img, .feat-ov, .feat-body, .card-in, .card-img img, .card-img video { transition: none; animation: none; }
 }
 @media (max-width: 480px) {
   .spine-links { padding-right: 2.5rem; }

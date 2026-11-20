@@ -68,7 +68,7 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
                 <div>
                   {archive.filter(e => e.date.getFullYear() === year).map(e => (
                     <a class="row" href={e.href} data-spectrum={e.spectrum} data-tags={e.tags.join(' ').toLowerCase()}
-                       data-img={e.image ?? ''} data-title={e.title} data-summary={e.summary}
+                       data-img={e.image ?? ''} data-video={e.video ?? ''} data-title={e.title} data-summary={e.summary}
                        data-meta={`${e.kind} - ${monthYear(e.date)}`} data-stack={e.stack}>
                       <span>
                         <span class="row-t">{e.title}</span>
@@ -120,11 +120,16 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
         current?.classList.remove('cur');
         current = row;
         row.classList.add('cur');
-        const { img: src, title, summary, meta, stack, spectrum } = row.dataset;
+        const { img: src, video, title, summary, meta, stack, spectrum } = row.dataset;
         const band = card.querySelector<HTMLElement>('.spec');
         // Each post's sections fade in where they belong (never sliding over from the last post's).
         if (band && spectrum) showSpectrum(band, spectrum);
-        if (src) {
+        if (video) {
+          const el = document.createElement('video');
+          Object.assign(el, { src: video, poster: src ?? '', muted: true, loop: true, autoplay: true, playsInline: true });
+          img.replaceChildren(el);
+          el.play().catch(() => {});
+        } else if (src) {
           const el = document.createElement('img');
           el.src = src;
           el.alt = '';

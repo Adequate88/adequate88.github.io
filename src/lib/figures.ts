@@ -36,13 +36,26 @@ function tooltips(root: ParentNode) {
       }));
       t.classList.add('is-on'); place(x, y);
     };
-    el.addEventListener('pointerenter', e => show(e.clientX, e.clientY));
-    el.addEventListener('pointermove', e => place(e.clientX, e.clientY));
-    el.addEventListener('pointerleave', () => t.classList.remove('is-on'));
-    el.addEventListener('focus', () => { const r = el.getBoundingClientRect(); show(r.left + r.width / 2, r.top); });
+    const showAtEl = () => { const r = el.getBoundingClientRect(); show(r.left + r.width / 2, r.top); };
+    // A finger "leaves" as soon as it lifts, so touch gets tap-to-show instead of hover.
+    el.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') show(e.clientX, e.clientY); });
+    el.addEventListener('pointermove', e => { if (e.pointerType !== 'touch') place(e.clientX, e.clientY); });
+    el.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') t.classList.remove('is-on'); });
+    el.addEventListener('pointerup', e => { if (e.pointerType === 'touch') showAtEl(); });
+    el.addEventListener('focus', showAtEl);
     el.addEventListener('blur', () => t.classList.remove('is-on'));
   });
+  if (!tipDismiss) {
+    // The tip is position: fixed, so it would drift off its element on scroll; a tap elsewhere closes it too.
+    tipDismiss = true;
+    const hide = () => tip?.classList.remove('is-on');
+    window.addEventListener('scroll', hide, { passive: true });
+    document.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'touch' && !(e.target as Element).closest?.('[data-tip]')) hide();
+    });
+  }
 }
+let tipDismiss = false;
 
 /* ── Image viewer: one image visible, tabs swap them ── */
 function views(fig: HTMLElement) {

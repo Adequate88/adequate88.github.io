@@ -4,7 +4,7 @@ import Colophon from '../../components/Colophon.astro';
 import Contents from '../../components/Contents.astro';
 import Spectrum from '../../components/Spectrum.astro';
 import { getCollection } from 'astro:content';
-import { monthYear } from '../../lib/entries';
+import { monthYear, toPublicPath } from '../../lib/entries';
 import { flow, flowSpectrum } from '../../lib/flow';
 import '../../styles/figures.css';
 
@@ -18,9 +18,10 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content, headings } = await project.render();
-const { title, subtitle, description, tags, year, month, image, github } = project.data;
+const { title, subtitle, description, tags, year, month, image, video, github } = project.data;
 const date = year ? monthYear(new Date(Number(year), Number(month ?? 1) - 1, 1)) : undefined;
-const shareImage = image ? '/' + image.replace(/^\//, '') : undefined;
+const shareImage = toPublicPath(image);
+const heroVideo = toPublicPath(video);
 // Where each section falls in the text: their colours, the band's lines and the rail's spacing.
 const marks = flow(project.body);
 const spectrum = flowSpectrum(project.body) ?? `/projects/${project.slug}`;
@@ -51,7 +52,9 @@ const spectrum = flowSpectrum(project.body) ?? `/projects/${project.slug}`;
       )}
     </header>
 
-    {shareImage && <img src={shareImage} alt="" class="post-hero-image" decoding="async" />}
+    {heroVideo
+      ? <video src={heroVideo} poster={shareImage} class="post-hero-image" autoplay muted loop playsinline aria-hidden="true"></video>
+      : shareImage && <img src={shareImage} alt="" class="post-hero-image" decoding="async" />}
 
     <Contents headings={headings} marks={marks} />
 
@@ -73,4 +76,13 @@ const spectrum = flowSpectrum(project.body) ?? `/projects/${project.slug}`;
   import { initContents } from '../../lib/contents';
   document.addEventListener('astro:page-load', initFigures);
   document.addEventListener('astro:page-load', initContents);
+
+  // A <video> swapped in by a view transition never loads (it was parsed in a detached
+  // document), so autoplay never fires. Reload and start it after every page load.
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll<HTMLVideoElement>('video[autoplay]').forEach(v => {
+      if (v.error || v.readyState === 0) v.load();
+      v.play().catch(() => {});
+    });
+  });
 </script>

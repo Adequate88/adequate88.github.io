@@ -15,6 +15,7 @@ export interface Entry {
   date: Date;
   href: string;
   image?: string;
+  video?: string;   // looping clip; `image` is its still
   /** Its spectral band: where its sections fall in the text (lib/flow.ts), or a fingerprint of the URL. */
   spectrum: string;
   /** Estimated length in px (lib/flow.ts), figures included. */
@@ -28,7 +29,7 @@ export const monthName = (d: Date) => MONTHS[d.getMonth()];
 export const monthYear = (d: Date) => `${monthName(d)} ${d.getFullYear()}`;
 
 // Content images are written as `assets/foo.png` or `/assets/foo.png`.
-const toPublicPath = (p?: string) => (p ? '/' + p.replace(/^\//, '') : undefined);
+export const toPublicPath =(p?: string) => (p ? '/' + p.replace(/^\//, '') : undefined);
 
 export async function getEntries(): Promise<Entry[]> {
   const projects = (await getCollection('projects')).map((p): Entry => ({
@@ -39,6 +40,7 @@ export async function getEntries(): Promise<Entry[]> {
     date: new Date(Number(p.data.year ?? 1970), Number(p.data.month ?? 1) - 1, 1),
     href: `/projects/${p.slug}`,
     image: toPublicPath(p.data.image),
+    video: toPublicPath(p.data.video),
     spectrum: flowSpectrum(p.body) ?? `/projects/${p.slug}`,
     length: flowLength(p.body),
     tags: p.data.tags,

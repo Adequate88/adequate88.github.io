@@ -252,7 +252,7 @@ span.tl-post { cursor: default; }
 :root[data-theme="dark"] .tt-spec i { background: #16181f; }
 
 /* ── Home: the one orchestrated moment ── */
-body.nav-hidden .stage { min-height: 100vh; display: flex; align-items: center; }
+body.nav-hidden .stage { min-height: 100vh; min-height: 100svh; display: flex; align-items: center; }
 body.nav-hidden .doc { width: 100%; }
 .head, .lede, .hero-links { text-align: left; justify-content: flex-start; }
 .head .kicker .smallcaps { font-size: .85rem; color: var(--text-subtle); }

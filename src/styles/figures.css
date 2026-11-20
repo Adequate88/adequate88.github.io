@@ -281,7 +281,9 @@
 .fx-seg button:hover { color: var(--text); }
 .fx-seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
 @media (max-width: 520px) {
-  .fx-seg { gap: .4rem; min-width: 0; }
+  /* On narrow screens the label drops above the buttons and the buttons wrap (16px radius still reads as a pill on one row). */
+  .fx-seg { gap: .4rem; min-width: 0; max-width: 100%; flex-wrap: wrap; }
+  .fx-seg-btns { max-width: 100%; flex-wrap: wrap; border-radius: 16px; }
   .fx-seg button { padding: .26rem .5rem; font-size: .7rem; }
 }
 
@@ -472,7 +474,8 @@
 }
 .fx-tabs button:hover { color: var(--text); border-color: var(--text-subtle); }
 .fx-tabs button[aria-pressed="true"] { color: var(--bg); background: var(--text); border-color: var(--text); }
-.fx-views { position: relative; border-radius: 4px; overflow: hidden; background: #000; aspect-ratio: 16 / 9; }
+/* --ar sets the frame to the renders' shape (default 16:9); images are cropped to fill it. */
+.fx-views { position: relative; border-radius: 4px; overflow: hidden; background: #000; aspect-ratio: var(--ar, 16 / 9); }
 .prose .fx-views img { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border-radius: 0; object-fit: cover; opacity: 0; transition: opacity .25s ease; }
 .prose .fx-views img.is-on { opacity: 1; }
 .fx-views-note {

@@ -7,7 +7,8 @@ status: active
 year: "2026"
 month: "06"
 github: https://github.com/Adequate88/Raytracer-LBVH
-image: assets/wavefront.gif
+image: assets/wavefront.jpg
+video: assets/wavefront.mp4
 ---
 
 **Tech:** C++, Vulkan, GLSL, SDL3

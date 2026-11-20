@@ -23,7 +23,8 @@ const projects = defineCollection({
     status: z.enum(['active', 'completed', 'archived']).default('completed'),
     year: z.string().optional(),
     month: z.string().optional(),
-    image: z.string().optional(),
+    image: z.string().optional(),   // still: social card, Work page cards, video poster
+    video: z.string().optional(),   // looping clip shown as the hero instead of the still
     github: z.string().optional(),
   }),
 });

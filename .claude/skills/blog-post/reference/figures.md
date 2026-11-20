@@ -48,7 +48,7 @@ project pages are in `src/content/projects/`.
 
 | Component | Good for | Example |
 |---|---|---|
-| `data-fx="views"` + `.fx-views` | Tabs between alternative renders of the same frame (with a per-image `data-note`) | T fig 10 |
+| `data-fx="views"` + `.fx-views` | Tabs between alternative renders of the same frame (with a per-image `data-note`); set `style="--ar:W/H"` on `.fx-views` when the renders aren't 16:9 | T fig 10 |
 | `data-fx="compare"` + `.fx-compare` | Before/after slider of two aligned images, optional picker and heat-scale bar | T fig 13 |
 
 ## Text and code
