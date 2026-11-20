@@ -104,6 +104,14 @@
 }
 .contents--rail .contents-panel::-webkit-scrollbar { display: none; }
 
+/* The rail is a map of the post: each section takes the share of the rail that
+   it takes of the text (--span-t, from lib/flow.ts), and an open section's
+   subsections sit where they fall within it. Labels never overlap: a section
+   too short for its label just takes the room the label needs. */
+.contents--rail { --span: clamp(20rem, calc(100vh - 13rem), 36rem); }
+.contents--rail .contents-section { min-height: calc(var(--span-t, 0) * var(--span)); }
+.contents--rail .contents-sub li { margin-top: max(0px, calc(var(--dt, 0) * var(--span) - 1.65rem)); }
+
 /* ── Pill: a button at the bottom that opens the list ── */
 .contents--pill {
   position: fixed;

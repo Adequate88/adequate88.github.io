@@ -30,7 +30,7 @@ export async function GET(context: APIContext) {
   <channel>
     <title>Alessandro Salo — Work</title>
     <link>${site}/work</link>
-    <description>Projects and blog posts on rendering, GPUs and making things fast.</description>
+    <description>Projects and blog posts on rendering, GPUs and making things run fast.</description>
     <language>en</language>
 ${items}
   </channel>

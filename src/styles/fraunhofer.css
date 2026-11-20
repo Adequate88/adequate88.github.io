@@ -66,9 +66,21 @@ h1, h2, h3 { font-weight: 300; letter-spacing: -.01em; }
     width .9s var(--ease-spec),
     margin .9s var(--ease-spec),
     opacity .5s ease,
+    transform .3s ease,
     background-color .7s ease;
 }
 :root[data-theme="dark"] .spec { background: rgba(255, 255, 255, .035); }
+
+/* Hovers never move the lines. Flare: while you rest on anything clickable, a
+   wave runs along the band, each line briefly growing in turn (BaseLayout lets
+   the last pass finish when you leave). Focus: some lines rise in
+   the same wave and stay up while the rest step back (a post's topics on the
+   Work page). */
+.spec.spec--focus i { opacity: calc(var(--on) * .25); }
+.spec.spec--focus i.is-lit { --s: 2.6; opacity: var(--on); transform: scaleY(2.6); transition-delay: calc(var(--n) * 35ms); }
+.spec.spec--solo i.is-lit { transition-delay: 0s; }   /* one line: no wave to wait for */
+.spec.spec.spec--flare i { animation: spec-flare .6s cubic-bezier(.3, 0, .3, 1) calc(var(--n) * 35ms) both; }
+@keyframes spec-flare { 40% { transform: scaleY(calc(var(--s, 1) + 1.4)); } }   /* from each line's own height */
 :root[data-theme="dark"] .spec::before { opacity: 0; }
 :root[data-theme="dark"] .spec i { background: var(--c); }
 .spec--still::before, .spec--still i { transition: none !important; }
@@ -100,6 +112,77 @@ h1, h2, h3 { font-weight: 300; letter-spacing: -.01em; }
 .spec--hero:not(.spec--arrived) i { animation: spec-line .6s ease calc(2.2s + var(--n) * 80ms) backwards; }
 @keyframes spec-scan { to { clip-path: inset(0 0 0 0); } }
 @keyframes spec-line { from { opacity: 0; } }
+
+/* The home band's lines are posts: hovering one quietly names it (index.astro) */
+.tl { position: relative; width: min(100%, 34rem); margin-top: 2.1rem; }
+.tl .spec { width: 100%; margin-top: 0; }
+.tl--page { margin-top: 0; }
+
+/* Work page: the band leaves the header and docks at the top of the window
+   while you scroll (on screens that can hover; on touch it just scrolls away).
+   Docked, it gets a backdrop that fades into the page below it. */
+.head--docked { padding-bottom: 0; }
+.tl-sentinel { display: block; height: 0; }
+.tl-dock { position: relative; z-index: 30; margin: .5rem 0 1.75rem; padding: 1rem 0; }
+@media (hover: hover) {
+  .tl-dock { position: sticky; top: .75rem; }
+  .tl-dock::before {
+    content: '';
+    position: absolute;
+    inset: -.75rem -2rem -3.25rem;
+    background: linear-gradient(180deg, var(--bg) calc(100% - 1.75rem), transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s ease;
+  }
+  .tl-dock.is-docked::before { opacity: 1; }
+}
+.tl-dock .tl-label { padding: .05rem .35rem; margin-top: -.05rem; border-radius: 4px; background: var(--bg); }
+span.tl-post { cursor: default; }
+/* On the Work page, hovering a topic fades the posts without it */
+.doc .row, .doc .feat { transition: opacity .25s ease; }
+.doc.is-topic [data-tags]:not(.has-topic) { opacity: .3; }
+.tl-posts { position: absolute; inset: 0; }
+.tl-post {
+  position: absolute;
+  top: 50%;
+  left: var(--x);
+  width: 18px;
+  height: 26px;
+  margin: -13px 0 0 -9px;
+}
+/* A short stem drops from the line toward the label */
+.tl-post::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 16px;
+  width: 1px;
+  height: 0;
+  background: var(--line);
+  transition: height .25s ease;
+}
+:root[data-theme="dark"] .tl-post::after { background: var(--c); }
+.tl-label {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translate(-50%, -3px);
+  white-space: nowrap;
+  font: 400 .74rem/1.3 var(--font-body);
+  color: var(--text-muted);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.tl-start .tl-label { left: 4px; transform: translate(0, -3px); }
+.tl-end .tl-label { left: auto; right: 4px; transform: translate(0, -3px); }
+.tl-when { margin-left: .5em; color: var(--text-subtle); }
+.tl-post:hover::after, .tl-post:focus-visible::after { height: 8px; }
+.tl-post:hover .tl-label, .tl-post:focus-visible .tl-label { opacity: 1; transform: translate(-50%, 0); }
+.tl-start:hover .tl-label, .tl-start:focus-visible .tl-label,
+.tl-end:hover .tl-label, .tl-end:focus-visible .tl-label { transform: none; }
+@media (hover: none) { .tl-label, .tl-post::after { display: none; } }
 
 .spec--page { margin-top: 1.5rem; }
 
@@ -359,4 +442,5 @@ body.nav-hidden .doc { width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .head h1, .spec--hero, .spec--hero i { animation: none !important; clip-path: none !important; }
   .spec::before, .spec i { transition: none; }
+  .spec.spec.spec--flare i { animation: none; }
 }

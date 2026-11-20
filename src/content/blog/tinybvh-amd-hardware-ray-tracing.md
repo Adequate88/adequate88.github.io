@@ -2,10 +2,12 @@
 title: "Custom BVH Trees on AMD's Ray Tracing Hardware"
 date: 2026-11-18
 excerpt: "Hardware ray tracing is generally opaque: acceleration structure and traversal implementations are hidden in drivers. But, if you look hard enough, you can do it yourself. In this blog I explain how I managed to traverse TinyBVH builds using AMD's hardware accelerators. The results showed that we are faster than Mesa's Vulkan driver implementations on my GPU."
-tags: [graphics-programming, ray-tracing, acceleration-structures, AMD, OpenCL, Vulkan]
+tags: [ray-tracing, acceleration-structures, GPU, optimization, AMD, OpenCL, Vulkan]
 image: /assets/blog/tinybvh-hw/hero-sponza.png
 readtime: 14 min read
 ---
+
+*Disclosure: the figures and diagrams on this site were generated with Claude Code, based on my own measurements, results and project reports.*
 
 **Tech:** C++, OpenCL (Clang AMDGPU builtins), Vulkan, Mesa RADV, RDNA3/RDNA4 ISA
 
@@ -47,7 +49,7 @@ Before getting into the node formats, it helps to know how TinyBVH is put togeth
 
 ## The simpler 4-wide AMD hardware BVH
 
-The first implementation uses the 4-wide BVH originally released with RDNA2; it is the simpler format to implement as well. This format has two general node types, both of which can be found from RADV's definitions. These are the 128-byte **Box32** node, which holds four child boxes with 32-bit float precision, and a 64-byte **triangle node**, which holds triangles; Figure 4 shows both layouts. Nodes refer to their children with a 32-bit node ID, where an ID is the child's byte offset from the root node in units of 8 bytes. The reason being that AMD nodes must be 64-byte aligned, meaning the lowest three bits are always free — so those bits are free real estate. The hardware reads them as the node's type: 5 for a Box32 node and 0 for a triangle node.
+The first implementation uses the 4-wide BVH originally released with RDNA2; it is the simpler format to implement as well. This format has two general node types, both of which can be found from RADV's definitions. These are the 128-byte **Box32** node, which holds four child boxes with 32-bit float precision, and a 64-byte **triangle node**, which holds triangles; Figure 4 shows both layouts. Nodes refer to their children with a 32-bit node ID: the child's byte offset from the root node, divided by 8. Because AMD nodes must be 64-byte aligned, that offset is always a multiple of 64, so after dividing by 8 the lowest three bits of the ID are always zero. That makes them free real estate, so AMD uses them to store the node's type: 5 for a Box32 node and 0 for a triangle node.
 
 The converter itself walks the `MBVH<4>` depth-first. For each internal node, we first reserve 128 bytes in the output buffer, on a 128-byte boundary so the node never straddles two cache lines, and fill in the fields we already know: its flags and its parent's ID. Then we walk its children. If the child is a triangle, we immediately process it into the 64-byte triangle hardware node. If it is an internal child, we push it onto a stack, since we don't yet know where in memory the child will be written. The processing of this child is only completed later when it is popped from that stack and processed itself — at this point, we know where in memory it is and we can patch the node's ID into its parent.
 

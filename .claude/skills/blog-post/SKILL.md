@@ -38,12 +38,26 @@ Match the reference post's **kind** of writing and figures, not its contents.
 ---
 title: "Plain, specific title"
 date: 2026-11-18
-excerpt: "2–4 sentences: the problem, what I did, the headline result."
-tags: [graphics-programming, ray-tracing, ...]
+excerpt: "3–4 sentences: the problem, what I did, the headline result (see 0. below)."
+tags: [ray-tracing, acceleration-structures, GPU, OpenCL]   # see Tags below
 image: /assets/blog/<short-name>/hero.png   # also used as the social card
 readtime: 14 min read                        # estimate at ~220 words/min of prose
 ---
 ```
+
+**Tags** become the topic lines on the Work page's band (one line per tag,
+thicker the more posts carry it; `topics()` in `src/lib/entries.ts`), so keep
+them consistent. Reuse an existing tag before inventing a new one:
+
+- Topics, lowercase: `ray-tracing`, `acceleration-structures`, `optimization`,
+  `simulation`, `rasterization`, `shading`, `particles`
+- Technology, in its usual spelling: `GPU` (any GPU programming), `OpenCL`,
+  `Vulkan`, `GLSL`, `WebGL`, `SIMD`, `AMD`
+
+Tag what the post is substantially about (typically 2–7 tags), not every
+library it touches. Skip site-wide tags like "graphics-programming": a tag on
+nearly every post tells the reader nothing. Only add a new tag for a genuinely
+new topic, and spell it the same way every time.
 
 Assets go in `public/assets/blog/<short-name>/` and are referenced with absolute
 paths. Use `.jpg` for renders/photos, `.png` for anything with flat colour or
@@ -51,6 +65,12 @@ text. Give every `<img>` real `alt` text, plus `loading="lazy" decoding="async"`
 
 ## Anatomy of a post
 
+0. **Summary under the title**: the frontmatter `excerpt` (blog) or `description`
+   (projects) is shown as the lead paragraph under the title and on the cards.
+   Write it like the reference post's: 3–4 plain sentences, first person: the
+   problem, what I did ("In this blog I ..."), and the headline result with its
+   real number. This *is* the post's summary: **never add a TL;DR** or other
+   summary paragraph to the body.
 1. **Tech line** right under the frontmatter: `**Tech:** C++, Vulkan, ...`
 2. **"At a glance" stat row** (`fx-glance`), 3–4 headline numbers, each with a
    short key, the number, and a label saying exactly what it measures. Only for
@@ -60,9 +80,12 @@ text. Give every `<img>` real `alt` text, plus `loading="lazy" decoding="async"`
    (`1. **Can we do X?** ...`). The results section answers them.
 4. **Body sections** (`##`), each one idea, ordered so every section only needs
    what came before. Use `###` for steps or sub-results inside a section.
-   The contents rail and the coloured heading bars are generated from `##`/`###`
-   automatically: keep headings short (they appear in the rail) and never add
-   your own numbering, bars or heading styles.
+   The contents rail, the coloured heading bars and the spectral band under the
+   title are all generated from where each `##`/`###` falls in the text
+   (`src/lib/flow.ts`): a heading's colour is the spectrum at its position, the
+   band has a line there, and the rail is spaced like the text. Keep headings
+   short (they appear in the rail) and never add your own numbering, bars,
+   colours or heading styles.
 5. **Results** with `###` per comparison: setup (hardware, scenes, how it was
    measured) → figure → what stands out, often as bold-lead bullets.
 6. **Next steps**: bold-lead bullets of honest open problems and limits.

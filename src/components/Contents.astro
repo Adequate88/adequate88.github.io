@@ -3,27 +3,34 @@
  * Contents.astro — a post's sections, for skipping around (see lib/contents.ts).
  *
  * Wide screens: a rail in the right margin, drawn as a vertical spectrum with
- * each section as a line across it; the band fills in as you read.
+ * each section as a line across it, spaced like the sections are in the text;
+ * the band fills in as you read.
  * Narrow screens: a pill at the bottom naming the current section, which
  * opens the same list. Without JS it's a plain list of links.
  */
-import { colorAt, MIN_NM, MAX_NM } from '../lib/spectrum';
+import { colorAtT, type Mark } from '../lib/flow';
 import '../styles/contents.css';
 
 interface Heading { depth: number; slug: string; text: string }
-interface Props { headings: Heading[] }
+interface Props { headings: Heading[]; marks?: Mark[] }
 
 const all = Astro.props.headings.filter(h => h.depth === 2 || h.depth === 3);
-// Each entry gets the band's colour at its place in the list (violet first, red last).
-const color = (i: number) => colorAt(MIN_NM + (i / Math.max(1, all.length - 1)) * (MAX_NM - MIN_NM));
+// Where each heading falls in the text (lib/flow.ts), 0 at the top to 1 at the end.
+// It picks the heading's colour off the spectrum and spaces the rail like the text.
+// (Evenly spaced if the estimate and the rendered headings ever disagree.)
+const marks = Astro.props.marks;
+const ts = marks?.length === all.length ? marks.map(m => m.t) : all.map((_, i) => i / Math.max(1, all.length - 1));
 
-type Entry = Heading & { c: string };
-const sections: (Entry & { subs: Entry[] })[] = [];
+type Entry = Heading & { c: string; t: number; dt: number };
+const sections: (Entry & { span: number; subs: Entry[] })[] = [];
 all.forEach((h, i) => {
-  const entry = { ...h, c: color(i) };
-  if (h.depth === 2 || sections.length === 0) sections.push({ ...entry, subs: [] });
+  const entry = { ...h, c: colorAtT(ts[i]), t: ts[i], dt: i ? ts[i] - ts[i - 1] : ts[i] };
+  if (h.depth === 2 || sections.length === 0) sections.push({ ...entry, span: 0, subs: [] });
   else sections[sections.length - 1].subs.push(entry);
 });
+// How much of the text each section covers, up to the next ## (or the end).
+sections.forEach((s, i) => { s.span = (sections[i + 1]?.t ?? 1) - s.t; });
+const f = (n: number) => n.toFixed(3);
 
 // Each ## in the text wears its rail colour as a short bar above it (fraunhofer.css).
 const headingColors = sections.map(s => `.prose h2[id="${s.slug}"]{--c:${s.c};--bar:var(--c-ink)}`).join('');
@@ -42,13 +49,13 @@ const headingColors = sections.map(s => `.prose h2[id="${s.slug}"]{--c:${s.c};--
         <span class="contents-rail" aria-hidden="true"></span>
         <ol class="contents-list">
           {sections.map(s => (
-            <li class="contents-section">
+            <li class="contents-section" style={`--span-t:${f(s.span)}`}>
               <a class="contents-link contents-link--major" href={`#${s.slug}`} style={`--c:${s.c}`}>{s.text}</a>
               {s.subs.length > 0 && (
                 <div class="contents-sub">
                   <ol>
                     {s.subs.map(sub => (
-                      <li><a class="contents-link contents-link--minor" href={`#${sub.slug}`} style={`--c:${sub.c}`}>{sub.text}</a></li>
+                      <li style={`--dt:${f(sub.dt)}`}><a class="contents-link contents-link--minor" href={`#${sub.slug}`} style={`--c:${sub.c}`}>{sub.text}</a></li>
                     ))}
                   </ol>
                 </div>

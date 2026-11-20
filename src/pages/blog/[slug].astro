@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Colophon from '../../components/Colophon.astro';
 import Contents from '../../components/Contents.astro';
-import { spectrumKey } from '../../lib/image-spectrum';
+import { flow, flowSpectrum } from '../../lib/flow';
 import Spectrum from '../../components/Spectrum.astro';
 import { getCollection } from 'astro:content';
 import '../../styles/figures.css';
@@ -19,7 +19,9 @@ const { post } = Astro.props;
 const { Content, headings } = await post.render();
 const { title, date, excerpt, tags, image, readtime } = post.data;
 
-const spectrum = await spectrumKey(`/blog/${post.slug}`, image);
+// Where each section falls in the text: their colours, the band's lines and the rail's spacing.
+const marks = flow(post.body);
+const spectrum = flowSpectrum(post.body) ?? `/blog/${post.slug}`;
 
 const fmtDate = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -46,7 +48,7 @@ const fmtDate = (d: Date) =>
 
     {image && <img src={image} alt="" class="post-hero-image" decoding="async" />}
 
-    <Contents headings={headings} />
+    <Contents headings={headings} marks={marks} />
 
     <div class="prose">
       <Content />

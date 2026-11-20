@@ -17,6 +17,11 @@ import '../styles/dark-mode.css';
 import '../styles/focus-visible.css';
 import '../styles/fraunhofer.css';
 import { ViewTransitions } from 'astro:transitions';
+import { timelineSpectrum, topics } from '../lib/entries';
+
+// Hovering Home or Work slides the band to that page's own: the timeline of posts, and their topics.
+const timeline = await timelineSpectrum();
+const workSpectrum = (await topics()).spectrum;
 
 const path = Astro.url.pathname;
 // Each nav link is active for its own path plus any it absorbed (Work covers projects and posts).
@@ -67,7 +72,7 @@ const isHome = path === '/' || path === '';
 
   <!-- Icons -->
   <link rel="icon" type="image/svg+xml" href="/assets/logo-monogram.svg" />
-  <meta name="theme-color" content="#f3f4f7" />
+  <meta name="theme-color" content="#ecebe5" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -109,8 +114,8 @@ const isHome = path === '/' || path === '';
   <nav class="spine" transition:persist>
     <a class="spine-brand" href="/" id="brand-link">AS<b>.</b></a>
     <div class="spine-links">
-      <a class:list={[{ active: isActive('/') }]} href="/" data-spectrum="sun">Home</a>
-      <a class:list={[{ active: isActive('/work') }]} href="/work" data-match="/work /projects /blog" data-spectrum="hydrogen">Work</a>
+      <a class:list={[{ active: isActive('/') }]} href="/" data-spectrum={timeline}>Home</a>
+      <a class:list={[{ active: isActive('/work') }]} href="/work" data-match="/work /projects /blog" data-spectrum={workSpectrum}>Work</a>
       <a class:list={[{ active: isActive('/about') }]} href="/about" data-spectrum="helium">About</a>
       <a href="https://github.com/Adequate88" target="_blank" rel="noopener">GitHub&#8201;&#8599;</a>
     </div>
@@ -138,8 +143,8 @@ const isHome = path === '/' || path === '';
   </script>
 
   <script>
-    // The page's main spectral band follows you around: its lines slide to the
-    // next page's spectrum on navigation, and to a link's spectrum while it's hovered.
+    // The page's main spectral band follows you around: on navigation its lines
+    // slide from the last page's spectrum to the new page's.
     import { show } from '../lib/spectrum';
 
     const band = () => document.querySelector<HTMLElement>('.spec[data-main]');
@@ -155,19 +160,73 @@ const isHome = path === '/' || path === '';
       requestAnimationFrame(() => show(b, target));
     });
 
-    // Links carrying a spectrum preview it on the main band (archive rows preview in their own card).
-    const preview = (e: Event, on: boolean) => {
-      const link = (e.target as Element).closest?.<HTMLElement>('a[data-spectrum]');
-      if (!link || link.closest('.row')) return;
-      const related = (e as PointerEvent | FocusEvent).relatedTarget;
-      if (related instanceof Node && link.contains(related)) return;
+    // Hovering never moves the lines, so they keep their meaning. While you
+    // rest on anything clickable, a wave runs along the band, line by line, and
+    // finishes its pass when you leave; a post on the Work page instead lights
+    // up its topics' lines, rising in the same wave.
+    // One pass runs the flare along the band once; while you're still hovering
+    // when it ends, the next pass follows. A new hover between passes starts one
+    // at once; leaving lets the current pass finish, so the wave never stops
+    // halfway or falls out of step.
+    let hovering = false, timer = 0, passEnd = 0;
+    const pass = () => {
       const b = band();
-      if (b) show(b, on ? link.dataset.spectrum! : b.dataset.spectrum!);
+      if (!b) return;
+      b.classList.remove('spec--flare');
+      void b.offsetWidth;   // restart the animation
+      b.classList.add('spec--flare');
+      // Lines start 35ms apart and pulse for 600ms; then a short rest before the next pass.
+      const lines = [...b.children].filter(i => (i as HTMLElement).style.getPropertyValue('--on') === '1').length;
+      const duration = 600 + Math.max(0, lines - 1) * 35;
+      passEnd = performance.now() + duration;
+      clearTimeout(timer);
+      timer = window.setTimeout(() => { if (hovering) pass(); }, duration + 350);
     };
-    document.addEventListener('pointerover', e => preview(e, true));
-    document.addEventListener('pointerout', e => preview(e, false));
-    document.addEventListener('focusin', e => preview(e, true));
-    document.addEventListener('focusout', e => preview(e, false));
+    const startWave = () => {
+      hovering = true;
+      if (performance.now() >= passEnd) pass();   // mid-pass, the next one follows on its own
+    };
+    const stopWave = () => { hovering = false; };
+
+    // What hovering an element does to the band: nothing, or a wave (a post on
+    // the Work page also lights up its topics, which ride the wave from their raised height).
+    const topicLines = () => [...document.querySelectorAll<HTMLElement>('.tl-post[data-topic]')];
+    const effect = (el: HTMLElement | null | undefined) => {
+      if (!el || el.matches('.tl-post[data-topic]')) return 'none';   // topic lines handle themselves (work.astro)
+      return el.dataset.tags !== undefined && topicLines().length ? 'topics' : 'wave';
+    };
+    const target = (node: EventTarget | Element | null | undefined) =>
+      (node as Element | null)?.closest?.<HTMLElement>('a, button, summary, .tl-post');
+
+    const hover = (e: Event, on: boolean) => {
+      const el = target(e.target);
+      const related = (e as PointerEvent | FocusEvent).relatedTarget;
+      if (!el || (related instanceof Node && el.contains(related))) return;
+      const b = band();
+      if (!b) return;
+      const kind = effect(el);
+      if (kind === 'topics') {
+        // Topic lines are laid out in the same order as the band's lines.
+        const tags = el.dataset.tags!.split(' ');
+        b.classList.toggle('spec--focus', on);
+        topicLines().forEach((t, i) => b.children[i]?.classList.toggle('is-lit', on && tags.includes(t.dataset.topic!)));
+      }
+      if (kind !== 'none') on ? startWave() : stopWave();
+    };
+
+    // A new page starts fresh; if the mouse is already resting on something
+    // (the side menu stays put between pages), its wave carries on.
+    document.addEventListener('astro:after-swap', () => {
+      clearTimeout(timer);
+      hovering = false;
+      passEnd = 0;
+      const el = target([...document.querySelectorAll(':hover')].pop());
+      if (effect(el) !== 'none') startWave();
+    });
+    document.addEventListener('pointerover', e => hover(e, true));
+    document.addEventListener('pointerout', e => hover(e, false));
+    document.addEventListener('focusin', e => hover(e, true));
+    document.addEventListener('focusout', e => hover(e, false));
   </script>
 
   <div class="stage" transition:animate="fade">

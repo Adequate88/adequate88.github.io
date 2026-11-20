@@ -2,6 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Colophon from '../components/Colophon.astro';
 import Spectrum from '../components/Spectrum.astro';
+import { timeline, topics } from '../lib/entries';
+
+// Every post as a line at its date (lib/entries.ts): the band grows with each post.
+// Hovering a line quietly names its post; clicking it opens the post.
+const { spectrum, posts } = await timeline();
+const workSpectrum = (await topics()).spectrum;
 ---
 <BaseLayout title="Home - Alessandro Salo">
 
@@ -10,16 +16,25 @@ import Spectrum from '../components/Spectrum.astro';
     <header class="head">
       <span class="kicker"><span class="smallcaps">Portfolio</span></span>
       <h1>Alessandro Salo.</h1>
-      <p class="role">Aspiring graphics and game engine programmer</p>
-      <Spectrum spectrum="sun" class="spec--hero" main />
+      <p class="role">Graphics programmer and casual enjoyer of life</p>
+      <div class="tl">
+        <Spectrum spectrum={spectrum} class="spec--hero" main />
+        <div class="tl-posts">
+          {posts.map(p => (
+            <a href={p.href} class:list={['tl-post', p.edge && `tl-${p.edge}`]} style={`--x:${p.x};--c:${p.c}`} aria-label={`${p.title}, ${p.when}`}>
+              <span class="tl-label" aria-hidden="true">{p.title}<span class="tl-when">{p.when}</span></span>
+            </a>
+          ))}
+        </div>
+      </div>
     </header>
 
     <!-- Bio / Lede & Section Navigation Buttons -->
     <div class="lede">
-      <p>I'm constantly catching up to everything <strong>rendering</strong> and <strong>game engine</strong> related. I also make algorithms go fast with <strong>low/hardware-level optimisation</strong> and <strong>GPU programming</strong>.</p>
+      <p>I'm constantly catching up to everything <strong>rendering</strong> and <strong>game engine</strong> related. I also like making algorithms run fast with <strong>low/hardware-level optimisation</strong> and <strong>GPU programming</strong>.</p>
 
       <nav class="hero-links" aria-label="Sections">
-        <a class="ulink" href="/work" data-spectrum="hydrogen">Work</a><span class="sep" aria-hidden="true">/</span>
+        <a class="ulink" href="/work" data-spectrum={workSpectrum}>Work</a><span class="sep" aria-hidden="true">/</span>
         <a class="ulink" href="/about" data-spectrum="helium">About</a><span class="sep" aria-hidden="true">/</span>
         <a class="ulink" href="/assets/cv.pdf">CV&#8201;&#8595;</a>
       </nav>

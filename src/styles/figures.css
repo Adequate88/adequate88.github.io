@@ -14,7 +14,7 @@
   --c-slow:    #c42a3e;   /* only for "slower than native" */
   --c-grid:    rgba(22, 24, 31, 0.08);
   --ink-strong: #ffffff;  /* text on a saturated fill */
-  --fx-panel:  #f8f9fb;
+  --fx-panel:  #f3f2ed;
 }
 :root[data-theme="dark"] {
   --c-tb:      #8ea2f5;
@@ -200,6 +200,11 @@
 .fx-ill .q { fill: var(--text-subtle); opacity: .55; }
 .fx-ill .ar { fill: none; stroke: var(--text-subtle); stroke-width: 1.2; }
 .fx-ill .ah { fill: var(--text-subtle); }
+/* Grid traversal (3D-DDA): cells the ray visits, the ray itself, and where it stops */
+.fx-ill .vis { fill: color-mix(in oklab, var(--c-tb) 14%, transparent); stroke: none; }
+.fx-ill .ray { fill: none; stroke: var(--c-tb); stroke-width: 1.6; }
+.fx-ill .ray-end { fill: var(--c-tb); }
+.fx-ill .num-s { font-family: var(--font-mono); font-size: 7px; fill: var(--c-tb); }
 
 /* ── Horizontal bar chart ── */
 .fx-bars { --label: 6.2rem; --end: 3.4rem; position: relative; }

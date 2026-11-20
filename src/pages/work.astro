@@ -2,9 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Colophon from '../components/Colophon.astro';
 import Spectrum from '../components/Spectrum.astro';
-import { getEntries, monthName, monthYear } from '../lib/entries';
+import { getEntries, monthName, monthYear, topics } from '../lib/entries';
 
 const entries = await getEntries();
+// The band is what the posts are made of: a line per topic, heavier the more posts carry it.
+// Hovering a line names the topic and fades the posts without it.
+const { spectrum, topics: lines } = await topics();
 
 // Feature the newest entry that has an image; posts without one stay in the archive only.
 const featured = entries.find(e => e.image);
@@ -14,17 +17,31 @@ const featuredLabel = featured === entries[0] ? 'Latest' : 'Featured';
 const archive = entries.filter(e => e !== featured);
 const years = [...new Set(archive.map(e => e.date.getFullYear()))];
 ---
-<BaseLayout title="Work - Alessandro Salo" description="Projects and blog posts on rendering, GPUs and making things fast.">
+<BaseLayout title="Work - Alessandro Salo" description="Projects and blog posts on rendering, GPUs and making things run fast.">
 
   <article class="doc">
-    <header class="head head--page">
+    <header class="head head--page head--docked">
       <h1>Work.</h1>
-      <p class="head-sub">Projects and blog posts on rendering, GPUs and making things fast.</p>
-      <Spectrum spectrum="hydrogen" class="spec--page" main />
+      <p class="head-sub">Projects and blog posts on rendering, GPUs and making things run fast.</p>
     </header>
 
+    <!-- The topic band docks at the top of the window while you scroll, so hovering a topic fades the posts in view. -->
+    <span class="tl-sentinel" aria-hidden="true"></span>
+    <div class="tl-dock">
+      <div class="tl tl--page">
+        <Spectrum spectrum={spectrum} class="spec--page" main />
+        <div class="tl-posts">
+          {lines.map(t => (
+            <span class:list={['tl-post', t.edge && `tl-${t.edge}`]} data-topic={t.tag} style={`--x:${t.x};--c:${t.c}`}>
+              <span class="tl-label">#{t.label}<span class="tl-when">{t.count} {t.count === 1 ? 'post' : 'posts'}</span></span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+
     {featured && (
-      <a class="feat" href={featured.href} data-spectrum={featured.spectrum}>
+      <a class="feat" href={featured.href} data-spectrum={featured.spectrum} data-tags={featured.tags.join(' ').toLowerCase()}>
         <div class="feat-img">
           <img src={featured.image} alt="" decoding="async" />
           <div class="feat-ov">
@@ -50,7 +67,7 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
                 <h3 class="smallcaps yr-h">{year}</h3>
                 <div>
                   {archive.filter(e => e.date.getFullYear() === year).map(e => (
-                    <a class="row" href={e.href} data-spectrum={e.spectrum}
+                    <a class="row" href={e.href} data-spectrum={e.spectrum} data-tags={e.tags.join(' ').toLowerCase()}
                        data-img={e.image ?? ''} data-title={e.title} data-summary={e.summary}
                        data-meta={`${e.kind} - ${monthYear(e.date)}`} data-stack={e.stack}>
                       <span>
@@ -144,6 +161,43 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
     }
 
     document.addEventListener('astro:page-load', initCard);
+
+    // Hovering a topic line fades the posts that don't carry it.
+    function initTopics() {
+      const doc = document.querySelector<HTMLElement>('.doc');
+      if (!doc) return;
+      document.querySelectorAll<HTMLElement>('.tl-post[data-topic]').forEach(line => {
+        const tag = line.dataset.topic!;
+        const band = document.querySelector<HTMLElement>('.spec[data-main]');
+        const i = [...line.parentElement!.children].indexOf(line);
+        line.addEventListener('pointerenter', () => {
+          // Its own line on the band lights up, like a post lights up its topics.
+          band?.classList.add('spec--focus', 'spec--solo');
+          band?.children[i]?.classList.add('is-lit');
+          doc.classList.add('is-topic');
+          doc.querySelectorAll<HTMLElement>('[data-tags]').forEach(el =>
+            el.classList.toggle('has-topic', el.dataset.tags!.split(' ').includes(tag)));
+        });
+        line.addEventListener('pointerleave', () => {
+          band?.classList.remove('spec--focus', 'spec--solo');
+          band?.children[i]?.classList.remove('is-lit');
+          doc.classList.remove('is-topic');
+        });
+      });
+    }
+    document.addEventListener('astro:page-load', initTopics);
+
+    // Mark the band once it has docked, so it can draw its backdrop.
+    let docked: IntersectionObserver | undefined;
+    function initDock() {
+      docked?.disconnect();
+      const sentinel = document.querySelector('.tl-sentinel');
+      const dock = document.querySelector<HTMLElement>('.tl-dock');
+      if (!sentinel || !dock) return;
+      docked = new IntersectionObserver(([e]) => dock.classList.toggle('is-docked', !e.isIntersecting && e.boundingClientRect.top < 0));
+      docked.observe(sentinel);
+    }
+    document.addEventListener('astro:page-load', initDock);
   </script>
 
 </BaseLayout>

@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Colophon from '../../components/Colophon.astro';
+import Contents from '../../components/Contents.astro';
 import Spectrum from '../../components/Spectrum.astro';
 import { getCollection } from 'astro:content';
 import { monthYear } from '../../lib/entries';
-import { spectrumKey } from '../../lib/image-spectrum';
+import { flow, flowSpectrum } from '../../lib/flow';
 import '../../styles/figures.css';
 
 export async function getStaticPaths() {
@@ -16,11 +17,13 @@ export async function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const { Content } = await project.render();
+const { Content, headings } = await project.render();
 const { title, subtitle, description, tags, year, month, image, github } = project.data;
 const date = year ? monthYear(new Date(Number(year), Number(month ?? 1) - 1, 1)) : undefined;
 const shareImage = image ? '/' + image.replace(/^\//, '') : undefined;
-const spectrum = await spectrumKey(`/projects/${project.slug}`, shareImage);
+// Where each section falls in the text: their colours, the band's lines and the rail's spacing.
+const marks = flow(project.body);
+const spectrum = flowSpectrum(project.body) ?? `/projects/${project.slug}`;
 ---
 <BaseLayout title={`${title} — Alessandro Salo`} description={description} image={shareImage}>
 
@@ -48,6 +51,10 @@ const spectrum = await spectrumKey(`/projects/${project.slug}`, shareImage);
       )}
     </header>
 
+    {shareImage && <img src={shareImage} alt="" class="post-hero-image" decoding="async" />}
+
+    <Contents headings={headings} marks={marks} />
+
     <div class="prose">
       <Content />
     </div>
@@ -63,5 +70,7 @@ const spectrum = await spectrumKey(`/projects/${project.slug}`, shareImage);
 
 <script>
   import { initFigures } from '../../lib/figures';
+  import { initContents } from '../../lib/contents';
   document.addEventListener('astro:page-load', initFigures);
+  document.addEventListener('astro:page-load', initContents);
 </script>

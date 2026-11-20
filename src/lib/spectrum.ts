@@ -4,9 +4,11 @@
  * Each page shows a spectrum: a band from 380 to 760 nm with lines at real
  * wavelengths. In light mode it's an absorption spectrum (dark lines on the
  * continuous band), in dark mode an emission spectrum (the lines alone, in
- * their own colour). Pages have an element; projects get the spectrum of their
- * cover image (see image-spectrum.ts), or a stable fingerprint seeded by
- * their URL when the image has no colour to read.
+ * their own colour). The home page's lines are the posts on a timeline and
+ * the Work page's are their topics (both in entries.ts); About has an
+ * element. A post's lines are its sections, placed where they fall in the
+ * text (see flow.ts), or a stable fingerprint seeded by its URL when it has
+ * too few sections.
  *
  * Shared by the Spectrum component (build time) and the client scripts that
  * slide the lines from one spectrum to another.
@@ -18,7 +20,7 @@ export type Line = [number, number];
 export const MIN_NM = 380;
 export const MAX_NM = 760;
 /** Every band renders this many line slots, so any spectrum can morph into any other. */
-export const SLOTS = 12;
+export const SLOTS = 20;
 
 export const SPECTRA: Record<string, Line[]> = {
   // Fraunhofer lines in sunlight: K H G F b E D₂ D₁ C B A

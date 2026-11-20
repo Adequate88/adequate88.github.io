@@ -7,21 +7,21 @@
 
 :root {
   /* Surfaces */
-  --bg:             #f3f4f7;
-  --surface:        #e8e9ef;   /* Code blocks & placeholders */
+  --bg:             #ecebe5;
+  --surface:        #e2e0d8;   /* Code blocks & placeholders */
 
   /* Lines */
-  --border:         #d8dae3;
+  --border:         #d4d1c8;
   --border-subtle:  rgba(22, 24, 31, 0.08);
 
   /* Accent — spectroscope blue, used only for links & interaction */
   --accent:         #2b43b8;
 
   /* Text */
-  --text:           #16181f;
-  --text-body:      #2b2e38;   /* Long-form prose: a step softer than headings */
+  --text:           #212228;
+  --text-body:      #34363e;   /* Long-form prose: a step softer than headings */
   --text-muted:     #4f5260;
-  --text-subtle:    #868998;
+  --text-subtle:    #7c7f8e;
 
   /* Spectrum: 380 → 760 nm, violet on the left as a spectroscope shows it
      (stops mirror src/lib/spectrum.ts). --line is an absorption line. */
@@ -32,7 +32,7 @@
 
   /* Code: inline code + Shiki's css-variables theme (astro.config.mjs) */
   --astro-code-color-text:        #16181f;
-  --astro-code-color-background:  #e8e9ef;
+  --astro-code-color-background:  #e2e0d8;
   --astro-code-token-constant:    #333333;
   --astro-code-token-string:      #555555;
   --astro-code-token-comment:     #5c606d;
