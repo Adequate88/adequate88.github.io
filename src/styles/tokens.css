@@ -19,6 +19,7 @@
 
   /* Text */
   --text:           #16181f;
+  --text-body:      #2b2e38;   /* Long-form prose: a step softer than headings */
   --text-muted:     #4f5260;
   --text-subtle:    #868998;
 
@@ -43,7 +44,7 @@
 
   /* Type */
   --font-display: 'Spectral', Georgia, serif;
-  --font-body:    'Instrument Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:    'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
   --body-font-size:   1rem;
   --body-line-height: 1.7;

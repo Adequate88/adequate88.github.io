@@ -147,7 +147,7 @@ h1, h2, h3 { font-weight: 300; letter-spacing: -.01em; }
   flex-shrink: 0;
   border-radius: 1px;
   overflow: hidden;
-  background: #08090d;
+  background: #0e1014;
   box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .08);
 }
 .tt-spec::before {
@@ -266,7 +266,30 @@ body.nav-hidden .doc { width: 100%; }
 .post-head .spec { margin-top: 1.5rem; }
 .tag { font-size: .8rem; }
 .prose h2 { font-family: var(--font-display); font-weight: 300; font-size: 1.85rem; letter-spacing: -.02em; }
-.prose h3 { font-family: var(--font-display); font-weight: 400; font-style: italic; font-size: 1.35rem; }
+/* ### is a label, not a smaller chapter title: the body sans, set firm */
+.prose h3 { font-family: var(--font-body); font-weight: 600; font-style: normal; font-size: 1.18rem; letter-spacing: -.005em; }
+
+/* Section breaks: room above a heading, its text pulled in close below. Each ## carries a
+   short bar in its colour on the contents rail (set per heading by Contents.astro); pages
+   without a rail fall back to the continuum. */
+.prose h2 { margin-top: 4.5rem; line-height: 1.2; }
+.prose h3 { margin-top: 2.75rem; line-height: 1.3; }
+.prose h2 + :is(*, .fx) { margin-top: .7rem; }
+.prose h3 + :is(*, .fx) { margin-top: .45rem; }
+.prose h2::before {
+  content: '';
+  display: block;
+  width: 2.25rem;
+  height: 3px;
+  margin-bottom: 1.1rem;
+  background: var(--bar, var(--spectrum));
+}
+/* --bar is only set on headings with a rail colour (Contents.astro sets --bar: var(--c-ink)).
+   Yellows vanish on the light page, so there the colour is deepened toward the text, as an
+   absorption line would be; dark mode shows it pure, as emission. */
+.prose h2 { --c-ink: color-mix(in oklab, var(--c) 72%, var(--text)); }
+:root[data-theme="dark"] .prose h2 { --c-ink: var(--c); }
+.prose > h2:first-child { margin-top: 0; }
 .prose strong { font-weight: 600; }
 .prose a { text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); }
 .prose blockquote { border-left: 3px solid; border-image: linear-gradient(180deg, var(--stops)) 1; }

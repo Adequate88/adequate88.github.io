@@ -1,6 +1,6 @@
 :root[data-theme="dark"] {
   /* Surfaces */
-  --bg:             #08090d;
+  --bg:             #0e1014;
   --surface:        #13151c;
   /* Lines */
   --border:         #242733;
@@ -9,6 +9,7 @@
   --accent:         #9fb2ff;
   /* Text */
   --text:           #e9eaf0;
+  --text-body:      #d3d6e0;
   --text-muted:     #a3a6b4;
   --text-subtle:    #6c6f7e;
   /* Spectrum: emission — the lines light up in their own colour */

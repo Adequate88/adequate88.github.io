@@ -24,7 +24,11 @@ all.forEach((h, i) => {
   if (h.depth === 2 || sections.length === 0) sections.push({ ...entry, subs: [] });
   else sections[sections.length - 1].subs.push(entry);
 });
+
+// Each ## in the text wears its rail colour as a short bar above it (fraunhofer.css).
+const headingColors = sections.map(s => `.prose h2[id="${s.slug}"]{--c:${s.c};--bar:var(--c-ink)}`).join('');
 ---
+<style is:inline set:html={headingColors}></style>
 {sections.length >= 3 && (
   <nav class="contents" aria-label="Contents" data-contents>
     <button type="button" class="contents-toggle" aria-expanded="false" aria-controls="contents-panel">
