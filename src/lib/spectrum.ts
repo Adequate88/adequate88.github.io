@@ -11,7 +11,7 @@
  * too few sections.
  *
  * Shared by the Spectrum component (build time) and the client scripts that
- * slide the lines from one spectrum to another.
+ * show another spectrum on a band (lines fade in where they belong, never slide).
  */
 
 /** [wavelength in nm, drawn width in px] */
@@ -85,11 +85,23 @@ export function slots(lines: Line[]): Slot[] {
   });
 }
 
-/** Move a rendered band's lines to another spectrum; CSS transitions do the sliding. */
-export function show(band: HTMLElement, key: string, instant = false) {
+/** Lines never travel between spectra (every pattern means something, the
+ *  in-between wouldn't): they fade in one by one where they belong. */
+const entering = new WeakMap<HTMLElement, number>();
+export function enter(band: HTMLElement) {
+  clearTimeout(entering.get(band));
+  band.classList.remove('spec--enter');
+  void band.offsetWidth;   // restart the animation
+  band.classList.add('spec--enter');
+  // Clear it once every line is in, so it can't replay when another animation ends.
+  entering.set(band, window.setTimeout(() => band.classList.remove('spec--enter'), 450 + SLOTS * 35));
+}
+
+/** Show another spectrum on a rendered band: its lines appear in place, in turn. */
+export function show(band: HTMLElement, key: string) {
   if (band.dataset.shown === key) return;
   band.dataset.shown = key;
-  if (instant) band.classList.add('spec--still');
+  band.classList.add('spec--still');
   slots(resolve(key)).forEach((s, i) => {
     const line = band.children[i] as HTMLElement | undefined;
     if (!line) return;
@@ -98,6 +110,7 @@ export function show(band: HTMLElement, key: string, instant = false) {
     line.style.setProperty('--c', s.c);
     line.style.setProperty('--on', String(s.on));
   });
-  if (instant) { void band.offsetWidth; band.classList.remove('spec--still'); }
+  void band.offsetWidth;
+  band.classList.remove('spec--still');
+  enter(band);
 }
-

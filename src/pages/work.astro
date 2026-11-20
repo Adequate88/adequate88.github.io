@@ -122,9 +122,8 @@ const years = [...new Set(archive.map(e => e.date.getFullYear()))];
         row.classList.add('cur');
         const { img: src, title, summary, meta, stack, spectrum } = row.dataset;
         const band = card.querySelector<HTMLElement>('.spec');
-        // The first row shown places its lines directly; after that they slide between projects.
-        if (band && spectrum) showSpectrum(band, spectrum, !card.dataset.shownOnce);
-        card.dataset.shownOnce = '1';
+        // Each post's sections fade in where they belong (never sliding over from the last post's).
+        if (band && spectrum) showSpectrum(band, spectrum);
         if (src) {
           const el = document.createElement('img');
           el.src = src;

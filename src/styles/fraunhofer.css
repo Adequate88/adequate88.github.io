@@ -84,6 +84,8 @@ h1, h2, h3 { font-weight: 300; letter-spacing: -.01em; }
 :root[data-theme="dark"] .spec::before { opacity: 0; }
 :root[data-theme="dark"] .spec i { background: var(--c); }
 .spec--still::before, .spec--still i { transition: none !important; }
+/* A new spectrum arrives: its lines fade in one by one, in place (lib/spectrum.ts enter()) */
+.spec.spec--enter i { animation: spec-line .45s ease calc(var(--n) * 35ms) backwards; }
 
 /* Upright, violet at the top (the archive preview card) */
 .spec--v { width: 3px; height: auto; }

@@ -143,21 +143,18 @@ const isHome = path === '/' || path === '';
   </script>
 
   <script>
-    // The page's main spectral band follows you around: on navigation its lines
-    // slide from the last page's spectrum to the new page's.
-    import { show } from '../lib/spectrum';
+    // On arriving at a page, its band's lines fade in one by one. They never
+    // slide over from the last page's band: every pattern means something, and
+    // the in-between wouldn't.
+    import { enter } from '../lib/spectrum';
 
     const band = () => document.querySelector<HTMLElement>('.spec[data-main]');
-    let leaving: string | undefined;
 
-    document.addEventListener('astro:before-swap', () => { leaving = band()?.dataset.shown; });
     document.addEventListener('astro:after-swap', () => {
       const b = band();
-      if (!b || !leaving) return;
-      const target = b.dataset.spectrum!;
-      b.classList.add('spec--arrived');   // skip the first-visit scan
-      show(b, leaving, true);
-      requestAnimationFrame(() => show(b, target));
+      if (!b) return;
+      b.classList.add('spec--arrived');   // skip the home page's first-visit scan
+      enter(b);
     });
 
     // Hovering never moves the lines, so they keep their meaning. While you
