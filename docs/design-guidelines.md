@@ -93,6 +93,12 @@ In blog figures: blue = mine, grey = baseline, amber = third series, red = worse
 - **Spacing** on a 4px grid: 4, 8, 12, 16, 24, 32, 48. Related things sit closer than
   unrelated ones; a heading sits closer to its content than to what is above it.
 - No excess whitespace, oversized titles or oversized images.
+- **Sections in apps: headings in the margin.** A page with several sections sets each
+  heading (italic Spectral, its item count under it) in a ~190px left column, with the
+  content beside it and a hairline between sections, as the site's Work page sets its years. The eye
+  runs down the left edge to find a section. Few sections per page (about 3), ordered by
+  urgency; an empty section is one line, never a heading over "None." Zaptos:
+  `section()` in `app.js`, `.sec` in `style.css`.
 - **Radius:** 3px on the site; 6px for controls and 8px for dialogs in apps.
 - Don't repeat the same item on one page (a project listed twice, two buttons doing the
   same thing).
