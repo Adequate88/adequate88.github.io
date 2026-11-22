@@ -8,6 +8,8 @@ push to `master`. `npm run build` must pass before pushing.
 - Styles: `src/styles/` (`tokens.css` + `dark-mode.css` for colours and fonts,
   `fraunhofer.css` for the site's look, `prose.css` for post text,
   `figures.css` for the `fx-` figures, `contents.css` for the contents rail).
+- Design rules (readability, colour meanings, type scale) for the site and the apps that
+  share its look (Zaptos, the planner): `docs/design-guidelines.md`.
 - Every page must work in light and dark mode and at phone width.
 
 ## Blog posts
